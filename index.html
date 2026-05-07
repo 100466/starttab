@@ -9,7 +9,7 @@
         :root {
             --bg-glass: rgba(15, 15, 15, 0.75);
             --accent-blue: #00d2ff;
-            --gemini-blue: #4facfe;
+            --gemini-blue: #4285F4;
             --white: #ffffff;
         }
 
@@ -27,14 +27,16 @@
 
         /* 搜尋列 */
         .search-container { max-width: 650px; margin: 0 auto 30px; display: flex; align-items: center; gap: 12px; }
+        
+        /* Gemini 按鈕改回第二版圖示 */
         .gemini-btn {
             background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%;
             width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; text-decoration: none; transition: 0.3s; flex-shrink: 0;
         }
-        .gemini-btn i { color: var(--gemini-blue) !important; font-size: 22px; text-shadow: 0 0 10px rgba(79, 172, 254, 0.8); }
-        .gemini-btn:hover { background: rgba(79, 172, 254, 0.3); transform: scale(1.1); }
+        .gemini-btn i { color: var(--gemini-blue) !important; font-size: 24px; }
+        .gemini-btn:hover { background: rgba(66, 133, 244, 0.2); transform: scale(1.1); border-color: var(--gemini-blue); }
 
         .search-box { position: relative; flex-grow: 1; display: flex; align-items: center; }
         .search-box input {
@@ -44,7 +46,7 @@
         }
         .search-box i { position: absolute; left: 20px; color: var(--accent-blue); font-size: 18px; }
 
-        /* 選單導航 */
+        /* 選單 */
         .header-nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
         .dropdown { position: relative; }
         .dropbtn {
@@ -64,7 +66,6 @@
         .dropdown-content a:hover { background: #f0f7ff; padding-left: 22px; }
         .show { display: block; animation: fadeIn 0.2s; }
 
-        /* 卡片佈局 */
         .content-card {
             background: var(--bg-glass); padding: 25px; border-radius: 20px;
             backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); margin: 0 auto 25px;
@@ -95,7 +96,7 @@
 
     <div class="search-container">
         <a href="https://gemini.google.com/" class="gemini-btn" title="前往 Gemini">
-            <i class="fa-solid fa-sparkles"></i>
+            <i class="fab fa-google"></i>
         </a>
         <form action="https://www.google.com/search" method="GET" style="flex-grow: 1;">
             <div class="search-box">
@@ -109,19 +110,21 @@
         <button onclick="changeBg()" class="dropbtn"><i class="fas fa-palette"></i> 換背景</button>
 
         <div class="dropdown">
-            <button onclick="toggleDrop('schoolDrop')" class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校系統</button>
+            <button onclick="toggleDrop('schoolDrop')" class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校/工具</button>
             <div id="schoolDrop" class="dropdown-content">
                 <a href="https://classroom.google.com/"><i class="fas fa-chalkboard" style="color: #1a73e8;"></i> Google Classroom</a>
                 <a href="https://drive.google.com/"><i class="fab fa-google-drive" style="color: #34A853;"></i> 我的雲端硬碟</a>
                 <a href="https://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit"><i class="fas fa-file-excel" style="color: #1D6F42;"></i> 數位聯絡簿</a>
+                <a href="https://translate.google.com/"><i class="fas fa-language" style="color: #4285F4;"></i> Google 翻譯</a>
+                <a href="https://pomofocus.io/"><i class="fas fa-clock" style="color: #ff4c4c;"></i> 蕃茄鐘</a>
                 <a href="https://www.fhjh.tn.edu.tw/"><i class="fas fa-school"></i> 學校官網</a>
             </div>
         </div>
 
         <div class="dropdown">
-            <button onclick="toggleDrop('toolDrop')" class="dropbtn"><i class="fas fa-brain"></i> AI 與開發</button>
+            <button onclick="toggleDrop('toolDrop')" class="dropbtn"><i class="fas fa-code"></i> 寫程式/AI</button>
             <div id="toolDrop" class="dropdown-content">
-                <a href="https://gemini.google.com/"><i class="fa-solid fa-sparkles" style="color: #4285F4;"></i> Gemini</a>
+                <a href="https://gemini.google.com/"><i class="fab fa-google" style="color: #4285F4;"></i> Gemini</a>
                 <a href="https://chatgpt.com/"><i class="fas fa-robot" style="color: #10a37f;"></i> ChatGPT</a>
                 <a href="https://github.com/"><i class="fab fa-github" style="color: #333;"></i> GitHub</a>
                 <a href="https://www.tinkercad.com/"><i class="fas fa-cube" style="color: #f51324;"></i> Tinkercad</a>
@@ -131,8 +134,9 @@
         </div>
 
         <div class="dropdown">
-            <button onclick="toggleDrop('gameDrop')" class="dropbtn"><i class="fas fa-gamepad"></i> 休閒遊戲</button>
+            <button onclick="toggleDrop('gameDrop')" class="dropbtn"><i class="fas fa-gamepad"></i> 休閒娛樂</button>
             <div id="gameDrop" class="dropdown-content">
+                <a href="https://www.youtube.com/"><i class="fab fa-youtube" style="color: #FF0000;"></i> YouTube</a>
                 <a href="https://poki.com/zh"><i class="fas fa-ghost" style="color: #ffde00;"></i> Poki 遊戲</a>
                 <a href="https://www.crazygames.com/c/io"><i class="fas fa-rocket" style="color: #6131e8;"></i> CrazyGames (.io)</a>
                 <a href="https://deadshot.io/?cg=true&skipPrerollFirstSession=true"><i class="fas fa-crosshairs" style="color: #ff4c4c;"></i> Deadshot.io</a>
@@ -140,11 +144,10 @@
         </div>
 
         <div class="dropdown">
-            <button onclick="toggleDrop('otherDrop')" class="dropbtn"><i class="fas fa-ellipsis-h"></i> 其他</button>
-            <div id="otherDrop" class="dropdown-content">
-                <a href="https://translate.google.com/"><i class="fas fa-language"></i> 翻譯</a>
-                <a href="https://pomofocus.io/"><i class="fas fa-clock"></i> 蕃茄鐘</a>
-                <a href="https://www.youtube.com/"><i class="fab fa-youtube" style="color: #FF0000;"></i> YouTube</a>
+            <button onclick="toggleDrop('socialDrop')" class="dropbtn"><i class="fas fa-users"></i> 社群媒體</button>
+            <div id="socialDrop" class="dropdown-content">
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram" style="color: #E1306C;"></i> Instagram</a>
+                <a href="https://band.us/"><i class="fas fa-th-large" style="color: #22C34E;"></i> BAND</a>
             </div>
         </div>
     </div>
