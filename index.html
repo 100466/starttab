@@ -25,10 +25,8 @@
         #digital-clock { font-size: 72px; font-weight: 200; margin: 0; letter-spacing: 3px; }
         #date-display { font-size: 20px; opacity: 0.8; margin-top: 5px; }
 
-        /* 搜尋列 */
         .search-container { max-width: 650px; margin: 0 auto 30px; display: flex; align-items: center; gap: 12px; }
         
-        /* Gemini 按鈕 (第二版圖示) */
         .gemini-btn {
             background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%;
@@ -42,11 +40,10 @@
         .search-box input {
             width: 100%; padding: 14px 20px 14px 50px; border-radius: 50px;
             border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px); color: #000000; font-size: 16px; outline: none;
+            backdrop-filter: blur(10px); color: white; font-size: 16px; outline: none;
         }
         .search-box i { position: absolute; left: 20px; color: var(--accent-blue); font-size: 18px; }
 
-        /* 選單導航 */
         .header-nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
         .dropdown { position: relative; }
         .dropbtn {
@@ -65,6 +62,20 @@
         }
         .dropdown-content a:hover { background: #f0f7ff; padding-left: 22px; }
         .show { display: block; animation: fadeIn 0.2s; }
+
+        /* 特殊 Mest 圖示樣式：白底藍驚嘆號 */
+        .mest-icon {
+            background-color: white; 
+            color: #007bff; 
+            border-radius: 50%; 
+            width: 18px; 
+            height: 18px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 12px;
+            border: 1px solid #007bff;
+        }
 
         .content-card {
             background: var(--bg-glass); padding: 25px; border-radius: 20px;
@@ -112,13 +123,15 @@
         <div class="dropdown">
             <button onclick="toggleDrop('schoolDrop')" class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校/工具</button>
             <div id="schoolDrop" class="dropdown-content">
-                <a href="https://mest.meikoschool.com.tw/"><i class="fas fa-star" style="color: #ff9800;"></i> Mest</a>
+                <a href="https://mail.google.com/"><i class="fas fa-envelope" style="color: #EA4335;"></i> Gmail 信箱</a>
+                <a href="https://mest.meikoschool.com.tw/">
+                    <span class="mest-icon"><i class="fas fa-exclamation"></i></span> Mest
+                </a>
                 <a href="https://classroom.google.com/"><i class="fas fa-chalkboard" style="color: #1a73e8;"></i> Google Classroom</a>
                 <a href="https://drive.google.com/"><i class="fab fa-google-drive" style="color: #34A853;"></i> 我的雲端硬碟</a>
                 <a href="https://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit"><i class="fas fa-file-excel" style="color: #1D6F42;"></i> 數位聯絡簿</a>
                 <a href="https://translate.google.com/"><i class="fas fa-language" style="color: #4285F4;"></i> Google 翻譯</a>
                 <a href="https://pomofocus.io/"><i class="fas fa-clock" style="color: #ff4c4c;"></i> 蕃茄鐘</a>
-                <a href="https://www.fhjh.tn.edu.tw/"><i class="fas fa-school"></i> 學校官網</a>
             </div>
         </div>
 
@@ -137,6 +150,7 @@
         <div class="dropdown">
             <button onclick="toggleDrop('gameDrop')" class="dropbtn"><i class="fas fa-gamepad"></i> 休閒娛樂</button>
             <div id="gameDrop" class="dropdown-content">
+                <a href="https://store.steampowered.com/"><i class="fab fa-steam" style="color: #171a21;"></i> Steam 商店</a>
                 <a href="https://www.youtube.com/"><i class="fab fa-youtube" style="color: #FF0000;"></i> YouTube</a>
                 <a href="https://poki.com/zh"><i class="fas fa-ghost" style="color: #ffde00;"></i> Poki 遊戲</a>
                 <a href="https://www.crazygames.com/c/io"><i class="fas fa-rocket" style="color: #6131e8;"></i> CrazyGames (.io)</a>
