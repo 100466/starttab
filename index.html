@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>117 主控台</title>
+    <title>主控台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -28,7 +28,7 @@
         /* 搜尋列 */
         .search-container { max-width: 650px; margin: 0 auto 30px; display: flex; align-items: center; gap: 12px; }
         
-        /* Gemini 按鈕改回第二版圖示 */
+        /* Gemini 按鈕 (第二版圖示) */
         .gemini-btn {
             background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%;
@@ -46,7 +46,7 @@
         }
         .search-box i { position: absolute; left: 20px; color: var(--accent-blue); font-size: 18px; }
 
-        /* 選單 */
+        /* 選單導航 */
         .header-nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
         .dropdown { position: relative; }
         .dropbtn {
@@ -112,6 +112,7 @@
         <div class="dropdown">
             <button onclick="toggleDrop('schoolDrop')" class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校/工具</button>
             <div id="schoolDrop" class="dropdown-content">
+                <a href="https://mest.meikoschool.com.tw/"><i class="fas fa-star" style="color: #ff9800;"></i> Meiko 數位學習</a>
                 <a href="https://classroom.google.com/"><i class="fas fa-chalkboard" style="color: #1a73e8;"></i> Google Classroom</a>
                 <a href="https://drive.google.com/"><i class="fab fa-google-drive" style="color: #34A853;"></i> 我的雲端硬碟</a>
                 <a href="https://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit"><i class="fas fa-file-excel" style="color: #1D6F42;"></i> 數位聯絡簿</a>
@@ -153,7 +154,7 @@
     </div>
 
     <div class="content-card">
-        <h3><i class="fas fa-table-list"></i> 117 班級課表</h3>
+        <h3><i class="fas fa-table-list"></i> 主控台：班級課表</h3>
         <table class="schedule-table">
             <thead>
                 <tr><th class="time-label">節</th><th>週一</th><th>週二</th><th>週三</th><th>週四</th><th>週五</th></tr>
@@ -174,7 +175,7 @@
     </div>
 
     <div class="content-card">
-        <h3><i class="far fa-calendar-alt"></i> 班級與個人行事曆</h3>
+        <h3><i class="far fa-calendar-alt"></i> 主控台：行事曆</h3>
         <div class="calendar-grid">
             <iframe src="https://calendar.google.com/calendar/embed?src=c_a6c9f987bddfab6ae56e125c44395fa3ddfd11ca11844a00788df7269f740389%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe>
             <iframe src="https://calendar.google.com/calendar/embed?src=jerry3361999%40gmail.com&ctz=Asia%2FTaipei"></iframe>
