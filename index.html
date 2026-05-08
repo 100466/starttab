@@ -21,29 +21,84 @@
             color: var(--white); transition: background-image 0.5s ease; text-align: center;
         }
 
+        /* 數字時鐘 */
         .clock-container { margin: 30px 0; text-shadow: 0 0 20px rgba(0, 210, 255, 0.5); }
         #digital-clock { font-size: 72px; font-weight: 200; margin: 0; letter-spacing: 3px; }
         #date-display { font-size: 20px; opacity: 0.8; margin-top: 5px; }
 
-        .search-container { max-width: 650px; margin: 0 auto 30px; display: flex; align-items: center; gap: 12px; }
-        
-        .gemini-btn {
-            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%;
-            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; text-decoration: none; transition: 0.3s; flex-shrink: 0;
+        /* 整合式搜尋框 */
+        .search-container { 
+            max-width: 650px; 
+            margin: 0 auto 30px; 
+            position: relative;
+            display: flex;
+            align-items: center;
         }
-        .gemini-btn i { color: var(--gemini-blue) !important; font-size: 22px; }
-        .gemini-btn:hover { background: rgba(66, 133, 244, 0.2); transform: scale(1.1); border-color: var(--gemini-blue); }
 
-        .search-box { position: relative; flex-grow: 1; display: flex; align-items: center; }
-        .search-box input {
-            width: 100%; padding: 14px 20px 14px 50px; border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px); color: white; font-size: 16px; outline: none;
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 5px 10px 5px 20px;
+            transition: 0.3s;
         }
-        .search-box i { position: absolute; left: 20px; color: var(--accent-blue); font-size: 18px; }
 
+        .search-wrapper:focus-within {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+        }
+
+        .search-wrapper i.fa-search {
+            color: var(--accent-blue);
+            font-size: 18px;
+            margin-right: 15px;
+        }
+
+        .search-wrapper input {
+            flex-grow: 1;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            padding: 10px 0;
+        }
+
+        .search-wrapper input::placeholder { color: rgba(255, 255, 255, 0.6); }
+
+        /* 整合在搜尋框內的 Gemini 按鈕 */
+        .gemini-inline-btn {
+            background: linear-gradient(135deg, #4285F4, #34A853);
+            border: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            margin-left: 10px;
+        }
+
+        .gemini-inline-btn i {
+            color: white !important;
+            font-size: 18px;
+        }
+
+        .gemini-inline-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 0 10px rgba(66, 133, 244, 0.8);
+        }
+
+        /* 導航選單 */
         .header-nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
         .dropdown { position: relative; }
         .dropbtn {
@@ -63,7 +118,7 @@
         .dropdown-content a:hover { background: #f0f7ff; padding-left: 22px; }
         .show { display: block; animation: fadeIn 0.2s; }
 
-        /* Mest 專屬：白底藍驚嘆號樣式 */
+        /* Mest 白底藍驚嘆號 */
         .mest-icon-circle {
             background-color: white; 
             color: #007bff; 
@@ -104,13 +159,13 @@
     </div>
 
     <div class="search-container">
-        <a href="https://gemini.google.com/" class="gemini-btn" title="前往 Gemini">
-            <i class="fas fa-wand-magic-sparkles"></i>
-        </a>
-        <form action="https://www.google.com/search" method="GET" style="flex-grow: 1;">
-            <div class="search-box">
+        <form action="https://www.google.com/search" method="GET" style="width: 100%;">
+            <div class="search-wrapper">
                 <i class="fas fa-search"></i>
-                <input type="text" name="q" placeholder="在此輸入搜尋內容..." autocomplete="off">
+                <input type="text" name="q" placeholder="在 Google 上搜尋或點擊右側啟動 Gemini..." autocomplete="off">
+                <a href="https://gemini.google.com/" class="gemini-inline-btn" title="啟動 Gemini AI">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                </a>
             </div>
         </form>
     </div>
