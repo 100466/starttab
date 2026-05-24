@@ -56,11 +56,18 @@
         }
         .dropbtn:hover { border-color: var(--accent-blue); background-color: rgba(0, 210, 255, 0.2); }
         
+        /* 🔥 關鍵優化：限制選單高度並允許手機滾動，防止超出螢幕點不到 */
         .dropdown-content {
             display: none; position: absolute; background: white; min-width: 240px;
+            max-height: 280px; overflow-y: auto; -webkit-overflow-scrolling: touch;
             box-shadow: 0 8px 25px rgba(0,0,0,0.5); border-radius: 15px; z-index: 100; margin-top: 10px;
-            overflow: hidden; text-align: left;
+            overflow-x: hidden; text-align: left;
         }
+        
+        /* 滾動條美化（讓手機滑動時更好看） */
+        .dropdown-content::-webkit-scrollbar { width: 6px; }
+        .dropdown-content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+
         .dropdown-content button, .dropdown-content a {
             background: none; border: none; width: 100%; box-sizing: border-box;
             color: #333; padding: 12px 18px; text-decoration: none; display: flex;
@@ -188,7 +195,6 @@
     </div>
 
     <script>
-        // 智慧搜尋框邏輯 (網址/關鍵字雙模)
         function handleSearch(event) {
             if (event.key === 'Enter') {
                 const input = document.getElementById('smart-search').value.trim();
@@ -208,7 +214,6 @@
             }
         }
 
-        // 跨平台智慧 App/網頁 轉址函數
         function smartRedirect(webUrl, iosUrl) {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             const isIOS = /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -219,7 +224,6 @@
             }
         }
 
-        // 時間與日期更新
         function updateTime() {
             const now = new Date();
             document.getElementById('digital-clock').textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
@@ -227,7 +231,6 @@
         }
         setInterval(updateTime, 1000); updateTime();
 
-        // 下拉選單控制
         function toggleDrop(id) {
             const currentDrop = document.getElementById(id);
             const isShowing = currentDrop.classList.contains('show');
