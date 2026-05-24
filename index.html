@@ -24,7 +24,18 @@
             background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80');
             background-repeat: no-repeat; background-size: cover; background-attachment: fixed; background-position: center;
             color: var(--white); text-align: center;
+            transition: background-image 0.5s ease-in-out;
         }
+
+        /* 換背景按鈕 */
+        #bg-change-btn {
+            position: fixed; top: 20px; right: 20px;
+            background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white; border-radius: 50%; width: 45px; height: 45px;
+            cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s; z-index: 1000;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+        #bg-change-btn:hover { background: rgba(0, 210, 255, 0.4); border-color: var(--accent-blue); transform: scale(1.1); }
 
         .clock-container { margin: 30px 0; }
         #digital-clock { font-size: 72px; font-weight: 200; margin: 0; letter-spacing: 3px; text-shadow: 0 0 20px rgba(0, 210, 255, 0.5); }
@@ -111,17 +122,33 @@
         .schedule-table th { background: rgba(0, 210, 255, 0.4); }
         .time-label { background: rgba(255,255,255,0.1); font-weight: bold; width: 50px; }
 
-        /* 內嵌網頁行事曆容器 */
-        .calendar-wrapper {
-            width: 100%; height: 480px; border-radius: 12px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1); background: white; margin-top: 15px;
+        /* 多重日曆分頁切換樣式 */
+        .calendar-tabs {
+            display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 15px; flex-wrap: wrap;
         }
+        .calendar-tab-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 8px 16px; border-radius: 30px; cursor: pointer;
+            font-size: 13px; transition: 0.3s;
+        }
+        .calendar-tab-btn:hover { background: rgba(0, 210, 255, 0.2); border-color: var(--accent-blue); }
+        .calendar-tab-btn.active { background: var(--calendar-green); border-color: var(--calendar-green); box-shadow: 0 0 10px rgba(52, 168, 83, 0.4); }
+
+        .calendar-wrapper {
+            width: 100%; height: 450px; border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1); background: white; display: none;
+        }
+        .calendar-wrapper.active { display: block; animation: fadeIn 0.3s; }
         .calendar-wrapper iframe { width: 100%; height: 100%; border: none; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
+
+    <button id="bg-change-btn" onclick="changeBackground()" title="更換背景圖片">
+        <i class="fas fa-image"></i>
+    </button>
 
     <div class="clock-container">
         <div id="digital-clock">00:00:00</div>
@@ -143,33 +170,15 @@
         <div class="dropdown">
             <button onclick="toggleDrop('schoolDrop')" class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校與雲端工具</button>
             <div id="schoolDrop" class="dropdown-content">
-                <a href="https://www.google.com" target="_blank">
-                    <i class="fas fa-school" style="color: #ff6b6b;"></i> 學校首頁
-                </a>
-                <button onclick="smartRedirect('https://keep.google.com/', 'googlekeep://')">
-                    <i class="fas fa-lightbulb" style="color: var(--keep-yellow);"></i> Google Keep 筆記/待辦
-                </button>
-                <button onclick="smartRedirect('https://calendar.google.com/', 'calshow://')">
-                    <i class="far fa-calendar-alt" style="color: var(--calendar-green);"></i> 智慧行事曆
-                </button>
-                <button onclick="smartRedirect('https://mail.google.com/', 'googlegmail://')">
-                    <i class="fas fa-envelope" style="color: #EA4335;"></i> Gmail 信箱
-                </button>
-                <a href="https://mest.meikoschool.com.tw/" target="_blank">
-                    <span class="mest-icon-circle"><i class="fas fa-exclamation"></i></span> Mest 數位學習
-                </a>
-                <button onclick="smartRedirect('https://classroom.google.com/', 'googleclassroom://')">
-                    <i class="fas fa-chalkboard" style="color: #1a73e8;"></i> Google Classroom
-                </button>
-                <button onclick="smartRedirect('https://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit', 'googlesheets://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit')">
-                    <i class="fas fa-file-excel" style="color: #1D6F42;"></i> 數位聯絡簿
-                </button>
-                <button onclick="smartRedirect('https://docs.google.com/', 'googledocs://')">
-                    <i class="fas fa-file-lines" style="color: var(--doc-blue);"></i> Google 文件
-                </button>
-                <button onclick="smartRedirect('https://docs.google.com/spreadsheets/', 'googlesheets://')">
-                    <i class="fas fa-table" style="color: var(--sheet-green);"></i> Google 試算表
-                </button>
+                <a href="https://www.google.com" target="_blank"><i class="fas fa-school" style="color: #ff6b6b;"></i> 學校首頁</a>
+                <button onclick="smartRedirect('https://keep.google.com/', 'googlekeep://')"><i class="fas fa-lightbulb" style="color: var(--keep-yellow);"></i> Google Keep 筆記/待辦</button>
+                <button onclick="smartRedirect('https://calendar.google.com/', 'calshow://')"><i class="far fa-calendar-alt" style="color: var(--calendar-green);"></i> 智慧行事曆</button>
+                <button onclick="smartRedirect('https://mail.google.com/', 'googlegmail://')"><i class="fas fa-envelope" style="color: #EA4335;"></i> Gmail 信箱</button>
+                <a href="https://mest.meikoschool.com.tw/" target="_blank"><span class="mest-icon-circle"><i class="fas fa-exclamation"></i></span> Mest 數位學習</a>
+                <button onclick="smartRedirect('https://classroom.google.com/', 'googleclassroom://')"><i class="fas fa-chalkboard" style="color: #1a73e8;"></i> Google Classroom</button>
+                <button onclick="smartRedirect('https://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit', 'googlesheets://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit')"><i class="fas fa-file-excel" style="color: #1D6F42;"></i> 數位聯絡簿</button>
+                <button onclick="smartRedirect('https://docs.google.com/', 'googledocs://')"><i class="fas fa-file-lines" style="color: var(--doc-blue);"></i> Google 文件</button>
+                <button onclick="smartRedirect('https://docs.google.com/spreadsheets/', 'googlesheets://')"><i class="fas fa-table" style="color: var(--sheet-green);"></i> Google 試算表</button>
             </div>
         </div>
 
@@ -185,9 +194,7 @@
         <div class="dropdown">
             <button onclick="toggleDrop('gameDrop')" class="dropbtn"><i class="fas fa-gamepad"></i> 休閒娛樂</button>
             <div id="gameDrop" class="dropdown-content">
-                <button onclick="smartRedirect('https://www.youtube.com/', 'youtube://')">
-                    <i class="fab fa-youtube" style="color: #FF0000;"></i> YouTube App
-                </button>
+                <button onclick="smartRedirect('https://www.youtube.com/', 'youtube://')"><i class="fab fa-youtube" style="color: #FF0000;"></i> YouTube App</button>
                 <a href="https://store.steampowered.com/" target="_blank"><i class="fab fa-steam" style="color: #171a21;"></i> Steam 商店</a>
                 <a href="https://www.crazygames.com/" target="_blank"><i class="fas fa-gamepad" style="color: #FF6600;"></i> CrazyGames</a>
                 <a href="https://www.i-gamer.net/" target="_blank"><i class="fas fa-play-circle" style="color: #00A1D6;"></i> 遊戲天堂</a>
@@ -200,15 +207,9 @@
         <div class="dropdown">
             <button onclick="toggleDrop('socialDrop')" class="dropbtn"><i class="fas fa-users"></i> 社群媒體</button>
             <div id="socialDrop" class="dropdown-content">
-                <button onclick="smartRedirect('https://www.instagram.com/', 'instagram://')">
-                    <i class="fab fa-instagram" style="color: #E1306C;"></i> Instagram
-                </button>
-                <button onclick="smartRedirect('https://www.facebook.com/', 'fb://')">
-                    <i class="fab fa-facebook" style="color: var(--fb-blue);"></i> Facebook
-                </button>
-                <button onclick="smartRedirect('https://www.messenger.com/', 'fb-messenger://')">
-                    <i class="fab fa-facebook-messenger" style="color: var(--messenger-color);"></i> Messenger
-                </button>
+                <button onclick="smartRedirect('https://www.instagram.com/', 'instagram://')"><i class="fab fa-instagram" style="color: #E1306C;"></i> Instagram</button>
+                <button onclick="smartRedirect('https://www.facebook.com/', 'fb://')"><i class="fab fa-facebook" style="color: var(--fb-blue);"></i> Facebook</button>
+                <button onclick="smartRedirect('https://www.messenger.com/', 'fb-messenger://')"><i class="fab fa-facebook-messenger" style="color: var(--messenger-color);"></i> Messenger</button>
             </div>
         </div>
 
@@ -233,14 +234,66 @@
 
         <div class="content-card">
             <h3><i class="far fa-calendar-alt" style="color: var(--calendar-green);"></i> 個人智慧日曆</h3>
+            
+            <div class="calendar-tabs">
+                <button class="calendar-tab-btn active" onclick="switchCalendar(0)">行程日曆 A</button>
+                <button class="calendar-tab-btn" onclick="switchCalendar(1)">個人日曆</button>
+                <button class="calendar-tab-btn" onclick="switchCalendar(2)">行程日曆 B</button>
+                <button class="calendar-tab-btn" onclick="switchCalendar(3)">行程日曆 C</button>
+            </div>
+
+            <div class="calendar-wrapper active">
+                <iframe src="https://calendar.google.com/calendar/embed?src=c_a6c9f987bddfab6ae56e125c44395fa3ddfd11ca11844a00788df7269f740389%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe>
+            </div>
             <div class="calendar-wrapper">
-                <iframe src="https://calendar.google.com/calendar/embed?src=c_a6c9f987bddfab6ae56e125c44395fa3ddfd11ca11844a00788df7269f740389%40group.calendar.google.com&src=jerry3361999%40gmail.com&src=m7k83ecsm3pqukojfjt8gjt6u0%40group.calendar.google.com&src=3q9aujb2lch5d6ggkehe97a7do%40group.calendar.google.com&ctz=Asia%2FTaipei" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                <iframe src="https://calendar.google.com/calendar/embed?src=jerry3361999%40gmail.com&ctz=Asia%2FTaipei"></iframe>
+            </div>
+            <div class="calendar-wrapper">
+                <iframe src="https://calendar.google.com/calendar/embed?src=m7k83ecsm3pqukojfjt8gjt6u0%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe>
+            </div>
+            <div class="calendar-wrapper">
+                <iframe src="https://calendar.google.com/calendar/embed?src=3q9aujb2lch5d6ggkehe97a7do%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe>
             </div>
         </div>
 
     </div>
 
     <script>
+        // --- 初始化背景功能 ---
+        window.onload = function() {
+            const savedBg = localStorage.getItem('dashboardBg');
+            if (savedBg) {
+                document.body.style.backgroundImage = `url('${savedBg}')`;
+            }
+        };
+
+        function changeBackground() {
+            const newUrl = prompt("請貼上新的背景圖片網址 (URL)：\n\n💡 提示：如果想恢復原本的預設背景，請直接留空並按下「確定」。");
+            
+            if (newUrl !== null) {
+                if (newUrl.trim() === "") {
+                    const defaultBg = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80";
+                    document.body.style.backgroundImage = `url('${defaultBg}')`;
+                    localStorage.removeItem('dashboardBg'); // 清除記憶
+                } else {
+                    document.body.style.backgroundImage = `url('${newUrl}')`;
+                    localStorage.setItem('dashboardBg', newUrl); // 記憶新背景
+                }
+            }
+        }
+
+        // --- 核心功能區 ---
+        function switchCalendar(index) {
+            const tabs = document.querySelectorAll('.calendar-tab-btn');
+            const wrappers = document.querySelectorAll('.calendar-wrapper');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            wrappers.forEach(wrap => wrap.classList.remove('active'));
+            
+            tabs[index].classList.add('active');
+            wrappers[index].classList.add('active');
+        }
+
         function handleSearch(event) {
             if (event.key === 'Enter') {
                 const input = document.getElementById('smart-search').value.trim();
