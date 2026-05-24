@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google 雲端智慧主控台</title>
+    <title>跨平台智慧完全體主控台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -11,6 +11,7 @@
             --accent-blue: #00d2ff;
             --white: #ffffff;
             --keep-yellow: #FBBC04;
+            --calendar-green: #34A853;
         }
 
         body {
@@ -113,34 +114,62 @@
     </div>
 
     <div class="header-nav">
+        
         <div class="dropdown">
             <button onclick="toggleDrop('schoolDrop')" class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校與雲端工具</button>
             <div id="schoolDrop" class="dropdown-content">
                 <a href="https://www.google.com" target="_blank">
                     <i class="fas fa-school" style="color: #ff6b6b;"></i> 學校首頁
                 </a>
-                
                 <button onclick="smartRedirect('https://keep.google.com/', 'googlekeep://')">
                     <i class="fas fa-lightbulb" style="color: var(--keep-yellow);"></i> Google Keep 筆記/待辦
                 </button>
-
+                <button onclick="smartRedirect('https://calendar.google.com/', 'calshow://')">
+                    <i class="far fa-calendar-alt" style="color: var(--calendar-green);"></i> 智慧行事曆
+                </button>
                 <button onclick="smartRedirect('https://mail.google.com/', 'googlegmail://')">
                     <i class="fas fa-envelope" style="color: #EA4335;"></i> Gmail 信箱
                 </button>
-
                 <a href="https://mest.meikoschool.com.tw/" target="_blank">
                     <span class="mest-icon-circle"><i class="fas fa-exclamation"></i></span> Mest 數位學習
                 </a>
-
                 <button onclick="smartRedirect('https://classroom.google.com/', 'googleclassroom://')">
                     <i class="fas fa-chalkboard" style="color: #1a73e8;"></i> Google Classroom
                 </button>
-
                 <button onclick="smartRedirect('https://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit', 'googlesheets://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit')">
                     <i class="fas fa-file-excel" style="color: #1D6F42;"></i> 數位聯絡簿
                 </button>
             </div>
         </div>
+
+        <div class="dropdown">
+            <button onclick="toggleDrop('toolDrop')" class="dropbtn"><i class="fas fa-code"></i> 寫程式/AI</button>
+            <div id="toolDrop" class="dropdown-content">
+                <a href="https://gemini.google.com/" target="_blank"><i class="fas fa-wand-magic-sparkles" style="color: #4285F4;"></i> Gemini</a>
+                <a href="https://chatgpt.com/" target="_blank"><i class="fas fa-robot" style="color: #10a37f;"></i> ChatGPT</a>
+                <a href="https://github.com/" target="_blank"><i class="fab fa-github" style="color: #333;"></i> GitHub</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button onclick="toggleDrop('gameDrop')" class="dropbtn"><i class="fas fa-gamepad"></i> 休閒娛樂</button>
+            <div id="gameDrop" class="dropdown-content">
+                <button onclick="smartRedirect('https://www.youtube.com/', 'youtube://')">
+                    <i class="fab fa-youtube" style="color: #FF0000;"></i> YouTube App
+                </button>
+                <a href="https://store.steampowered.com/" target="_blank"><i class="fab fa-steam" style="color: #171a21;"></i> Steam 商店</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button onclick="toggleDrop('socialDrop')" class="dropbtn"><i class="fas fa-users"></i> 社群媒體</button>
+            <div id="socialDrop" class="dropdown-content">
+                <button onclick="smartRedirect('https://www.instagram.com/', 'instagram://')">
+                    <i class="fab fa-instagram" style="color: #E1306C;"></i> Instagram
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <div class="content-card">
@@ -159,40 +188,38 @@
     </div>
 
     <script>
-        // 【核心 1】智慧搜尋框邏輯 (自動判定網址與關鍵字)
+        // 智慧搜尋框邏輯 (網址/關鍵字雙模)
         function handleSearch(event) {
             if (event.key === 'Enter') {
                 const input = document.getElementById('smart-search').value.trim();
                 if (!input) return;
 
-                // 檢查是否為網址的規則 (帶有 .com, .tw, .net 或網址開頭等)
                 const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
 
                 if (urlPattern.test(input)) {
                     let targetUrl = input;
                     if (!/^https?:\/\//i.test(input)) {
-                        targetUrl = 'http://' + input; // 如果使用者沒打 http，自動補上
+                        targetUrl = 'http://' + input;
                     }
                     window.open(targetUrl, '_blank');
                 } else {
-                    // 如果不是網址，直接開啟 Google 搜尋
                     window.open('https://www.google.com/search?q=' + encodeURIComponent(input), '_blank');
                 }
             }
         }
 
-        // 【核心 2】跨平台智慧 App 轉址函數
+        // 跨平台智慧 App/網頁 轉址函數
         function smartRedirect(webUrl, iosUrl) {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             const isIOS = /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
             if (isIOS) {
-                window.location.href = iosUrl; // iOS 開啟對應 App
+                window.location.href = iosUrl;
             } else {
-                window.open(webUrl, '_blank'); // 電腦版開啟網頁版
+                window.open(webUrl, '_blank');
             }
         }
 
-        // 時鐘與日期更新邏輯
+        // 時間與日期更新
         function updateTime() {
             const now = new Date();
             document.getElementById('digital-clock').textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
@@ -200,13 +227,14 @@
         }
         setInterval(updateTime, 1000); updateTime();
 
-        // 下拉選單開關
+        // 下拉選單控制
         function toggleDrop(id) {
+            const currentDrop = document.getElementById(id);
+            const isShowing = currentDrop.classList.contains('show');
             document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
-            document.getElementById(id).classList.toggle('show');
+            if (!isShowing) currentDrop.classList.add('show');
         }
 
-        // 點擊空白處關閉選單
         window.onclick = function(event) {
             if (!event.target.closest('.dropdown')) {
                 document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
