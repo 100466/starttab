@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>主控台</title>
+    <title>跨平台智慧完全體主控台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -62,7 +62,7 @@
 
         /* 導覽選單 */
         .header-nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
-        .dropdown { position: relative; }
+        .dropdown { position: relative; padding-bottom: 10px; /* 緩衝區防止滑鼠移出時斷掉 */ }
         
         .dropbtn {
             background-color: var(--bg-glass); color: white; padding: 12px 22px;
@@ -74,8 +74,14 @@
         .dropdown-content {
             display: none; position: absolute; background: white; min-width: 250px;
             max-height: 400px; overflow-y: auto; -webkit-overflow-scrolling: touch;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5); border-radius: 15px; z-index: 1000; margin-top: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5); border-radius: 15px; z-index: 1000; margin-top: 5px;
             overflow-x: hidden; text-align: left;
+        }
+        
+        /* 滑鼠滑過下拉區塊時自動顯示內容 */
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: fadeIn 0.2s ease-in-out;
         }
         
         .dropdown-content::-webkit-scrollbar { width: 6px; }
@@ -88,7 +94,6 @@
             text-align: left; font-family: inherit;
         }
         .dropdown-content button:hover, .dropdown-content a:hover { background: #f0f7ff; padding-left: 22px; }
-        .show { display: block; animation: fadeIn 0.2s; }
 
         .mest-icon-circle {
             background-color: white; color: #007bff; border: 1px solid #007bff;
@@ -175,8 +180,8 @@
     <div class="header-nav">
         
         <div class="dropdown">
-            <button onclick="toggleDrop('schoolOnlyDrop')" class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校專區</button>
-            <div id="schoolOnlyDrop" class="dropdown-content">
+            <button class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校專區</button>
+            <div class="dropdown-content">
                 <a href="https://www.fhjh.tn.edu.tw/" target="_blank"><i class="fas fa-school" style="color: #ff6b6b;"></i> 學校首頁</a>
                 <a href="https://mest.meikoschool.com.tw/" target="_blank"><span class="mest-icon-circle"><i class="fas fa-exclamation"></i></span> Mest 數位學習</a>
                 <button onclick="smartRedirect('https://classroom.google.com/', 'googleclassroom://')"><i class="fas fa-chalkboard" style="color: #1a73e8;"></i> Google Classroom</button>
@@ -185,8 +190,8 @@
         </div>
 
         <div class="dropdown">
-            <button onclick="toggleDrop('cloudDrop')" class="dropbtn"><i class="fas fa-cloud"></i> 雲端工具</button>
-            <div id="cloudDrop" class="dropdown-content">
+            <button class="dropbtn"><i class="fas fa-cloud"></i> 雲端工具</button>
+            <div class="dropdown-content">
                 <button onclick="smartRedirect('https://keep.google.com/', 'googlekeep://')"><i class="fas fa-lightbulb" style="color: var(--keep-yellow);"></i> Google Keep 筆記/待辦</button>
                 <button onclick="smartRedirect('https://drive.google.com/', 'googledrive://')"><i class="fab fa-google-drive" style="color: #4285F4;"></i> Google 雲端硬碟</button>
                 <button onclick="smartRedirect('https://calendar.google.com/', 'calshow://')"><i class="far fa-calendar-alt" style="color: var(--calendar-green);"></i> 智慧行事曆</button>
@@ -197,8 +202,8 @@
         </div>
 
         <div class="dropdown">
-            <button onclick="toggleDrop('toolDrop')" class="dropbtn"><i class="fas fa-code"></i> 寫程式/AI</button>
-            <div id="toolDrop" class="dropdown-content">
+            <button class="dropbtn"><i class="fas fa-code"></i> 寫程式/AI</button>
+            <div class="dropdown-content">
                 <a href="https://gemini.google.com/" target="_blank"><i class="fas fa-wand-magic-sparkles" style="color: #4285F4;"></i> Gemini</a>
                 <a href="https://chatgpt.com/" target="_blank"><i class="fas fa-robot" style="color: #10a37f;"></i> ChatGPT</a>
                 <a href="https://github.com/" target="_blank"><i class="fab fa-github" style="color: #333;"></i> GitHub</a>
@@ -208,8 +213,8 @@
         </div>
 
         <div class="dropdown">
-            <button onclick="toggleDrop('gameDrop')" class="dropbtn"><i class="fas fa-gamepad"></i> 休閒娛樂</button>
-            <div id="gameDrop" class="dropdown-content">
+            <button class="dropbtn"><i class="fas fa-gamepad"></i> 休閒娛樂</button>
+            <div class="dropdown-content">
                 <button onclick="smartRedirect('https://www.youtube.com/', 'youtube://')"><i class="fab fa-youtube" style="color: #FF0000;"></i> YouTube App</button>
                 <a href="https://store.steampowered.com/" target="_blank"><i class="fab fa-steam" style="color: #171a21;"></i> Steam 商店</a>
                 <a href="https://www.crazygames.com/" target="_blank"><i class="fas fa-gamepad" style="color: #FF6600;"></i> CrazyGames</a>
@@ -221,8 +226,8 @@
         </div>
 
         <div class="dropdown">
-            <button onclick="toggleDrop('socialDrop')" class="dropbtn"><i class="fas fa-users"></i> 社群媒體</button>
-            <div id="socialDrop" class="dropdown-content">
+            <button class="dropbtn"><i class="fas fa-users"></i> 社群媒體</button>
+            <div class="dropdown-content">
                 <button onclick="smartRedirect('https://www.instagram.com/', 'instagram://')"><i class="fab fa-instagram" style="color: #E1306C;"></i> Instagram</button>
                 <button onclick="smartRedirect('https://www.facebook.com/', 'fb://')"><i class="fab fa-facebook" style="color: var(--fb-blue);"></i> Facebook</button>
                 <button onclick="smartRedirect('https://www.messenger.com/', 'fb-messenger://')"><i class="fab fa-facebook-messenger" style="color: var(--messenger-color);"></i> Messenger</button>
@@ -297,10 +302,10 @@
                 if (newUrl.trim() === "") {
                     const defaultBg = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80";
                     document.body.style.backgroundImage = `url('${defaultBg}')`;
-                    localStorage.removeItem('dashboardBg'); // 清除記憶
+                    localStorage.removeItem('dashboardBg');
                 } else {
                     document.body.style.backgroundImage = `url('${newUrl}')`;
-                    localStorage.setItem('dashboardBg', newUrl); // 記憶新背景
+                    localStorage.setItem('dashboardBg', newUrl);
                 }
             }
         }
@@ -359,19 +364,6 @@
             document.getElementById('date-display').textContent = now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
         }
         setInterval(updateTime, 1000); updateTime();
-
-        function toggleDrop(id) {
-            const currentDrop = document.getElementById(id);
-            const isShowing = currentDrop.classList.contains('show');
-            document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
-            if (!isShowing) currentDrop.classList.add('show');
-        }
-
-        window.onclick = function(event) {
-            if (!event.target.closest('.dropdown')) {
-                document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
-            }
-        }
     </script>
 </body>
 </html>
