@@ -62,7 +62,7 @@
 
         /* 導覽選單 */
         .header-nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
-        .dropdown { position: relative; padding-bottom: 10px; /* 緩衝區防止滑鼠移出時斷掉 */ }
+        .dropdown { position: relative; padding-bottom: 10px; /* 緩衝區 */ }
         
         .dropbtn {
             background-color: var(--bg-glass); color: white; padding: 12px 22px;
@@ -218,6 +218,8 @@
             <button class="dropbtn"><i class="fas fa-gamepad"></i> 休閒娛樂</button>
             <div class="dropdown-content">
                 <button onclick="smartRedirect('https://www.youtube.com/', 'youtube://')"><i class="fab fa-youtube" style="color: #FF0000;"></i> YouTube App</button>
+                <a href="https://deadshot.io/" target="_blank"><i class="fas fa-crosshairs" style="color: #ff4757;"></i> Deadshot.io 射擊</a>
+                <a href="https://www.geo-fs.com" target="_blank"><i class="fas fa-plane" style="color: #2e9cca;"></i> GeoFS 飛行模擬</a>
                 <a href="https://store.steampowered.com/" target="_blank"><i class="fab fa-steam" style="color: #171a21;"></i> Steam 商店</a>
                 <a href="https://www.crazygames.com/" target="_blank"><i class="fas fa-gamepad" style="color: #FF6600;"></i> CrazyGames</a>
                 <a href="https://www.i-gamer.net/" target="_blank"><i class="fas fa-play-circle" style="color: #00A1D6;"></i> 遊戲天堂</a>
@@ -343,6 +345,7 @@
             }
         }
 
+        // 智慧轉向系統
         function smartRedirect(webUrl, iosUrl) {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             const isAppleDevice = /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
