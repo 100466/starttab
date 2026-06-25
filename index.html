@@ -84,10 +84,6 @@
         .search-item-info { flex-grow: 1; display: flex; flex-direction: column; }
         .search-item-title { font-size: 14px; font-weight: bold; color: white; }
         .search-item-desc { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; }
-        .search-item-shortcut {
-            font-size: 11px; color: var(--accent-blue); background: rgba(0, 210, 255, 0.15);
-            padding: 3px 8px; border-radius: 50px; font-family: monospace; font-weight: bold;
-        }
 
         /* 導覽選單 */
         .header-nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
@@ -141,10 +137,11 @@
         .schedule-table {
             width: 100%; border-collapse: collapse; margin-top: 15px;
             background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;
+            font-size: 14px;
         }
-        .schedule-table th, .schedule-table td { padding: 10px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .schedule-table th, .schedule-table td { padding: 12px 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
         .schedule-table th { background: rgba(0, 210, 255, 0.4); }
-        .time-label { background: rgba(255,255,255,0.1); font-weight: bold; width: 45px; }
+        .time-label { background: rgba(255,255,255,0.1); font-weight: bold; width: 50px; }
         .lunch-break td { background: rgba(0, 210, 255, 0.15); font-size: 14px; letter-spacing: 3px; color: var(--accent-blue); font-weight: bold; }
 
         /* 多重日曆分頁切換樣式 */
@@ -177,7 +174,7 @@
     <div class="search-container">
         <div class="search-wrapper">
             <i class="fas fa-search" style="color: var(--accent-blue); margin-right: 15px;"></i>
-            <input type="text" id="smart-search" placeholder="輸入關鍵字（例如：聯絡簿、作業、小遊戲、ai...）" autocomplete="off" onkeydown="handleSearch(event)" onfocus="showSearchDropdown()" oninput="filterSearchDropdown()">
+            <input type="text" id="smart-search" placeholder="輸入按鈕名稱（例如：聯絡簿、Classroom、YouTube...）" autocomplete="off" onkeydown="handleSearch(event)" onfocus="showSearchDropdown()" oninput="filterSearchDropdown()">
             <button type="button" onclick="execSearchCmd('https://gemini.google.com/', 'googlechrome://gemini.google.com/')" class="gemini-inline-btn" title="啟動 Gemini">
                 <i class="fas fa-wand-magic-sparkles"></i>
             </button>
@@ -256,15 +253,15 @@
                     <tr><th class="time-label">節</th><th>週一</th><th>週二</th><th>週三</th><th>週四</th><th>週五</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td class="time-label">1</td><td>童軍</td><td>公民</td><td>班輔</td><td>生科</td><td>體育</td></tr>
-                    <tr><td class="time-label">2</td><td>體育</td><td>本土</td><td>週會</td><td>資科</td><td>歷史</td></tr>
-                    <tr><td class="time-label">3</td><td>音樂</td><td>英會</td><td>表藝</td><td>生物</td><td>國文</td></tr>
-                    <tr><td class="time-label">4</td><td>國文</td><td>健教</td><td>國文</td><td>家政</td><td>英語</td></tr>
+                    <tr><td class="time-label">1</td><td>童軍</td><td>公民</td><td>班級輔導</td><td>生活科技</td><td>體育</td></tr>
+                    <tr><td class="time-label">2</td><td>體育</td><td>本土語</td><td>週會</td><td>資訊科技</td><td>歷史</td></tr>
+                    <tr><td class="time-label">3</td><td>音樂</td><td>英會探檢</td><td>表演藝術</td><td>生物</td><td>國文</td></tr>
+                    <tr><td class="time-label">4</td><td>國文</td><td>健康教育</td><td>國文</td><td>家政</td><td>英語</td></tr>
                     <tr class="lunch-break"><td colspan="6">🍽️ 午餐與午休 (11:55 - 13:25) 💤</td></tr>
-                    <tr><td class="time-label">5</td><td>英語</td><td>英語</td><td>輔導</td><td>視藝</td><td>文翼</td></tr>
+                    <tr><td class="time-label">5</td><td>英語</td><td>英語</td><td>輔導</td><td>視覺藝術</td><td>文翼復興</td></tr>
                     <tr><td class="time-label">6</td><td>生物</td><td>國文</td><td>數學</td><td>國文</td><td>數學</td></tr>
-                    <tr><td class="time-label">7</td><td>社團</td><td>數學</td><td>地理</td><td>數學</td><td>生物</td></tr>
-                    <tr><td class="time-label">8</td><td>社團</td><td>國輔</td><td>數輔</td><td>英輔</td><td>導輔</td></tr>
+                    <tr><td class="time-label">7</td><td>多元社團</td><td>數學</td><td>地理</td><td>數學</td><td>生物</td></tr>
+                    <tr><td class="time-label">8</td><td>社團輔導</td><td>國文輔導</td><td>數學輔導</td><td>英語輔導</td><td>導師輔導</td></tr>
                 </tbody>
             </table>
         </div>
@@ -285,50 +282,54 @@
     </div>
 
     <script>
-        // --- 全站功能智慧檢索全量資料庫 (整合所有分類按鈕與精確關鍵字) ---
-        const allSearchItems = [
-            // 學校專區
-            { title: "學校首頁 (臺南市立復興國中)", desc: "前往復興國中官方首頁查看重要公告", url: "https://www.fhjh.tn.edu.tw/", icon: "fas fa-school", color: "#ff6b6b", shortcut: "/fhjh", keywords: ["學校", "復興", "國中", "首頁", "fhjh", "台南"] },
-            { title: "Mest 數位學習系統", desc: "明光美校 Mest 數位線上學習平台", url: "https://mest.meikoschool.com.tw/", icon: "fas fa-exclamation", color: "#007bff", shortcut: "/mest", keywords: ["mest", "明光", "美校", "數位學習", "補習", "上課"] },
-            { title: "Google Classroom 雲端課堂", desc: "查看學校各科作業與線上課堂公告", url: "https://classroom.google.com/", iosUrl: "googleclassroom://", icon: "fas fa-chalkboard", color: "#1a73e8", shortcut: "/class", keywords: ["classroom", "課堂", "作業", "學校", "公告", "上課", "學科"] },
-            { title: "數位聯絡簿", desc: "查看每天的家庭作業、小考與重要提醒項目", url: "https://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit", iosUrl: "googlesheets://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit", icon: "fas fa-file-excel", color: "#1D6F42", shortcut: "/book", keywords: ["聯絡簿", "作業", "小考", "回家作業", "家長", "聯絡", "試算表", "excel"] },
-            
-            // 雲端工具
-            { title: "Google Keep 智慧筆記", desc: "隨手紀錄靈感、待辦清單與備忘錄", url: "https://keep.google.com/", iosUrl: "googlekeep://", icon: "fas fa-lightbulb", color: "#FBBC04", shortcut: "/keep", keywords: ["keep", "筆記", "待辦", "備忘錄", "清單", "記事本"] },
-            { title: "Google 雲端硬碟", desc: "存取與管理你的個人及學校檔案", url: "https://drive.google.com/", iosUrl: "googledrive://", icon: "fab fa-google-drive", color: "#4285F4", shortcut: "/drive", keywords: ["drive", "雲端硬碟", "檔案", "儲存", "雲端", "硬碟", "上傳"] },
-            { title: "Google 智慧行事曆", desc: "規劃每日行程、考試時間與生活事件", url: "https://calendar.google.com/", iosUrl: "calshow://", icon: "far fa-calendar-alt", color: "#34A853", shortcut: "/calendar", keywords: ["calendar", "行事曆", "時間", "日程", "計畫", "考試時間"] },
-            { title: "Gmail 電子信箱", desc: "收發個人郵件、學校通知與平台驗證碼", url: "https://mail.google.com/", iosUrl: "googlegmail://", icon: "fas fa-envelope", color: "#EA4335", shortcut: "/mail", keywords: ["gmail", "信箱", "電子郵件", "email", "郵件", "收信"] },
-            { title: "Google 地圖", desc: "查詢路線、導航與街景服務", url: "https://www.google.com/maps", iosUrl: "comgooglemaps://", icon: "fas fa-map-location-dot", color: "#34A853", shortcut: "/maps", keywords: ["maps", "地圖", "導航", "路線", "街景", "找路", "地址"] },
-            { title: "Google 文件", desc: "線上撰寫報告、文章與編輯文字檔案", url: "https://docs.google.com/", iosUrl: "googledocs://", icon: "fas fa-file-lines", color: "#2b579a", shortcut: "/docs", keywords: ["docs", "文件", "文字", "word", "寫報告", "編輯"] },
-            { title: "Google 試算表", desc: "線上建立圖表、統計數據與處理複雜表格", url: "https://docs.google.com/spreadsheets/", iosUrl: "googlesheets://", icon: "fas fa-table", color: "#107c41", shortcut: "/sheets", keywords: ["sheets", "試算表", "表格", "excel", "計算", "統計"] },
-            
-            // 寫程式/AI
-            { title: "Gemini AI 助理", desc: "直接詢問 AI 任何問題與編寫程式碼", url: "https://gemini.google.com/", icon: "fas fa-wand-magic-sparkles", color: "#4285F4", shortcut: "/gemini", keywords: ["gemini", "ai", "人工智慧", "智慧助理", "問答", "寫作", "程式"] },
-            { title: "ChatGPT AI 機器人", desc: "OpenAI 強大的聊天智慧問答工具", url: "https://chatgpt.com/", icon: "fas fa-robot", color: "#10a37f", shortcut: "/gpt", keywords: ["chatgpt", "gpt", "openai", "ai", "機器人", "問問題"] },
-            { title: "GitHub 程式碼代管平台", desc: "託管專案、版本控制與探索全球開源專案", url: "https://github.com/", icon: "fab fa-github", color: "#ffffff", shortcut: "/github", keywords: ["github", "git", "程式碼", "寫程式", "專案", "開源", "代碼"] },
-            { title: "Google Colab 雲端運行", desc: "線上免排程、免配環境執行 Python 程式與 AI 模型", url: "https://colab.research.google.com/", icon: "fas fa-laptop-code", color: "#F9AB00", shortcut: "/colab", keywords: ["colab", "python", "程式", "寫程式", "ai", "雲端執行"] },
-            { title: "Tinkercad 3D 建模", desc: "簡單好上手的 3D 設計與電子電路模擬工具", url: "https://www.tinkercad.com/", icon: "fas fa-cube", color: "#00A3E0", shortcut: "/tinker", keywords: ["tinkercad", "3d", "建模", "列印", "電路", "arduino", "設計"] },
-            { title: "MakeCode micro:bit", desc: "微型電腦積木/Python 圖形化程式編輯器", url: "https://makecode.microbit.org/", icon: "fas fa-microchip", color: "#00A699", shortcut: "/bit", keywords: ["makecode", "microbit", "微型電腦", "積木", "python", "單晶片", "控制板"] },
-            { title: "CodeCombat 程式冒險", desc: "用寫程式（Python/JS）來打怪闖關的 RPG 遊戲", url: "https://codecombat.com/", icon: "fas fa-dragon", color: "#20b2aa", shortcut: "/combat", keywords: ["codecombat", "程式遊戲", "玩遊戲學程式", "python", "rpg", "打怪"] },
-            
-            // 休閒娛樂
-            { title: "YouTube 影音平台", desc: "觀看最新發燒影片、音樂、直播與教學短片", url: "https://www.youtube.com/", iosUrl: "youtube://", icon: "fab fa-youtube", color: "#FF0000", shortcut: "/yt", keywords: ["youtube", "yt", "影片", "音樂", "直播", "動漫", "娛樂"] },
-            { title: "Deadshot.io 射擊網頁遊戲", desc: "第一人稱免下載網頁 3D 槍戰射擊遊戲", url: "https://deadshot.io/", icon: "fas fa-crosshairs", color: "#ff4757", shortcut: "/deadshot", keywords: ["deadshot", "槍戰", "射擊", "射擊遊戲", "io遊戲", "網頁遊戲"] },
-            { title: "GeoFS 飛行模擬器", desc: "基於衛星地圖的逼真真實線上模擬飛行遊戲", url: "https://www.geo-fs.com", icon: "fas fa-plane", color: "#2e9cca", shortcut: "/geo", keywords: ["geofs", "飛行模擬", "開飛機", "飛機", "模擬飛行", "空戰"] },
-            { title: "Steam 遊戲商店", desc: "全球最大的 PC 電腦遊戲購買與下載平台", url: "https://store.steampowered.com/", icon: "fab fa-steam", color: "#171a21", shortcut: "/steam", keywords: ["steam", "商店", "買遊戲", "電腦遊戲", "特價"] },
-            { title: "CrazyGames 線上遊戲", desc: "暢玩上千款免下載的精采多元網頁遊戲", url: "https://www.crazygames.com/", icon: "fas fa-gamepad", color: "#FF6600", shortcut: "/crazy", keywords: ["crazygames", "線上遊戲", "網頁遊戲", "免費遊戲", "好玩小遊戲"] },
-            { title: "遊戲天堂", desc: "台灣經典老牌懷舊好玩小遊戲聚集地", url: "https://www.i-gamer.net/", icon: "fas fa-play-circle", color: "#00A1D6", shortcut: "/gamer", keywords: ["遊戲天堂", "igamer", "小遊戲", "免費遊戲", "懷舊"] },
-            { title: "Scratch 積木程式", desc: "麻省理工學院開發的兒童與青少年創意積木動畫遊戲創作平台", url: "https://scratch.mit.edu/", icon: "fas fa-cat", color: "#F7A226", shortcut: "/scratch", keywords: ["scratch", "積木程式", "做遊戲", "貓咪", "動畫", "程式創作"] },
-            { title: "Chunkbase (Minecraft 史萊姆區塊)", desc: "當個創世神麥塊地圖種子碼查詢器、史萊姆與地圖結構定位", url: "https://www.chunkbase.com/apps/slime-finder#seed=-5535997839764821991&platform=java&x=0&z=0&zoom=1", icon: "fas fa-map", color: "#55FF55", shortcut: "/chunk", keywords: ["chunkbase", "麥塊", "minecraft", "史萊姆區塊", "地圖", "種子碼", "地牢", "村莊"] },
-            { title: "Poki 網頁遊戲樂園", desc: "國外高質感流暢免下載網頁小遊戲隨點隨玩", url: "https://poki.com/zh", icon: "fas fa-smile", color: "#FFC107", shortcut: "/poki", keywords: ["poki", "小遊戲", "網頁遊戲", "免費遊戲", "休閒"] },
-            
-            // 社群媒體
-            { title: "Instagram 社群媒體", desc: "查看朋友動態、發布限時動態與追蹤感興趣照片貼文", url: "https://www.instagram.com/", iosUrl: "instagram://", icon: "fab fa-instagram", color: "#E1306C", shortcut: "/ig", keywords: ["instagram", "ig", "社群", "照片", "限時動態", "網美"] },
-            { title: "Facebook 臉書", desc: "聯繫親友、參與社團討論與瀏覽即時新聞動態", url: "https://www.facebook.com/", iosUrl: "fb://", icon: "fab fa-facebook", color: "#1877F2", shortcut: "/fb", keywords: ["facebook", "fb", "臉書", "社群", "社團"] },
-            { title: "Messenger 即時通訊", desc: "與好友一對一或建立群組即時語音、文字聊天通訊", url: "https://www.messenger.com/", iosUrl: "fb-messenger://", icon: "fab fa-facebook-messenger", color: "#00B2FF", shortcut: "/msg", keywords: ["messenger", "聊天", "通訊", "密人", "傳訊息", "語音"] }
-        ];
+        // 用來動態存放從 HTML 面板抓出來的按鈕資料
+        let allSearchItems = [];
 
-        // --- Flow Launcher 狀態變數與智慧關鍵字核心核心引擎 ---
+        // 【核心】自動掃描全網頁分類選單內的按鈕與連結文字
+        function initSearchDatabase() {
+            allSearchItems = [];
+            // 抓取所有下拉選單中的 a 標籤與 button 標籤
+            const menuElements = document.querySelectorAll('.dropdown-content a, .dropdown-content button');
+            
+            menuElements.forEach(el => {
+                const title = el.innerText.trim(); // 取得按鈕文字
+                const iconEl = el.querySelector('i');
+                const iconClass = iconEl ? iconEl.className : 'fas fa-link'; // 取得圖示
+                const color = iconEl ? iconEl.style.color || 'white' : 'white'; // 取得顏色
+                
+                let webUrl = '';
+                let iosUrl = '';
+
+                // 解析網址
+                if (el.tagName.toLowerCase() === 'a') {
+                    webUrl = el.getAttribute('href');
+                } else if (el.tagName.toLowerCase() === 'button') {
+                    // 解析 smartRedirect('網址', 'iOS協定') 的內容
+                    const onclickAttr = el.getAttribute('onclick') || '';
+                    const match = onclickAttr.match(/smartRedirect\(['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\)/);
+                    if (match) {
+                        webUrl = match[1];
+                        iosUrl = match[2];
+                    } else {
+                        // 檢查一般 execSearchCmd
+                        const cmdMatch = onclickAttr.match(/execSearchCmd\(['"]([^'"]+)['"]\)/);
+                        if (cmdMatch) webUrl = cmdMatch[1];
+                    }
+                }
+
+                if (webUrl) {
+                    allSearchItems.push({
+                        title: title,
+                        desc: `點擊直接開啟 ${title}`,
+                        url: webUrl,
+                        iosUrl: iosUrl,
+                        icon: iconClass,
+                        color: color
+                    });
+                }
+            });
+        }
+
         let currentSearchIndex = 0;
         const searchDropdown = document.getElementById('search-dropdown');
         const searchInput = document.getElementById('smart-search');
@@ -346,39 +347,32 @@
 
         function hideSearchDropdown() {
             searchDropdown.classList.remove('active');
-            currentSearchIndex = 0;
         }
 
-        // 核心檢索邏輯：支持拼音、名字、快捷鍵、關鍵字多元部分匹配
+        // 真正的動態文字模糊檢索引擎
         function filterSearchDropdown() {
             const query = searchInput.value.trim().toLowerCase();
             
-            // 若為空，預設展示所有可用快速項目
             if (!query) {
-                renderDropdownItems(allSearchItems);
+                // 如果搜尋框是空的，預設展示前 7 個項目
+                renderDropdownItems(allSearchItems.slice(0, 7));
                 return;
             }
 
-            // 智慧過濾：比對標題、描述、快捷鍵，以及陣列內的任一 Keywords 關鍵字！
+            // 直接對抓取到的「按鈕文字」進行模糊比對
             const filtered = allSearchItems.filter(item => {
-                const titleMatch = item.title.toLowerCase().includes(query);
-                const descMatch = item.desc.toLowerCase().includes(query);
-                const shortcutMatch = item.shortcut.toLowerCase().includes(query);
-                const keywordMatch = item.keywords.some(kw => kw.toLowerCase().includes(query));
-                
-                return titleMatch || descMatch || shortcutMatch || keywordMatch;
+                return item.title.toLowerCase().includes(query);
             });
 
+            currentSearchIndex = 0; 
             renderDropdownItems(filtered);
         }
 
-        // 動態將過濾出來的資料渲染成 HTML 面板元素
         function renderDropdownItems(items) {
             searchDropdown.innerHTML = '';
             
             if (items.length === 0) {
                 searchDropdown.classList.remove('active');
-                currentSearchIndex = -1;
                 return;
             }
 
@@ -387,7 +381,6 @@
                 itemDiv.className = 'search-item';
                 if (index === currentSearchIndex) itemDiv.classList.add('selected');
                 
-                // 設定點擊觸發事件
                 itemDiv.onclick = () => {
                     execSearchCmd(item.url, item.iosUrl);
                 };
@@ -398,7 +391,6 @@
                         <span class="search-item-title">${item.title}</span>
                         <span class="search-item-desc">${item.desc}</span>
                     </div>
-                    <span class="search-item-shortcut">${item.shortcut}</span>
                 `;
                 
                 searchDropdown.appendChild(itemDiv);
@@ -406,7 +398,6 @@
 
             searchDropdown.classList.add('active');
             
-            // 確保被選取的項目能自動滾動呈現在視窗中
             const selectedItem = searchDropdown.querySelector('.search-item.selected');
             if (selectedItem) selectedItem.scrollIntoView({ block: 'nearest' });
         }
@@ -427,7 +418,7 @@
             if (iosUrl) {
                 smartRedirect(webUrl, iosUrl);
             } else {
-                window.open(webUrl, '_self'); // 覆蓋原視窗
+                window.open(webUrl, '_self');
             }
             hideSearchDropdown();
         }
@@ -461,7 +452,6 @@
 
                 hideSearchDropdown();
 
-                // 檢查是否為直接輸入的網址
                 const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
                 if (urlPattern.test(input)) {
                     let targetUrl = input;
@@ -470,7 +460,6 @@
                     }
                     window.open(targetUrl, '_self');
                 } else {
-                    // 否則執行標準 Google 搜尋
                     window.open('https://www.google.com/search?q=' + encodeURIComponent(input), '_self');
                 }
             }
@@ -482,10 +471,12 @@
                 document.body.style.backgroundImage = `url('${savedBg}')`;
             }
             
+            // 初始化動態抓取按鈕資料庫
+            initSearchDatabase();
+
             if (searchInput) {
                 searchInput.focus();
             }
-            // 預先加載選單
             filterSearchDropdown();
         };
 
