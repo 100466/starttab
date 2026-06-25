@@ -174,7 +174,7 @@
     <div class="search-container">
         <div class="search-wrapper">
             <i class="fas fa-search" style="color: var(--accent-blue); margin-right: 15px;"></i>
-            <input type="text" id="smart-search" placeholder="輸入按鈕名稱（例如：聯絡簿、Classroom、YouTube...）" autocomplete="off" onkeydown="handleSearch(event)" onfocus="showSearchDropdown()" oninput="filterSearchDropdown()">
+            <input type="text" id="smart-search" placeholder="輸入名稱或網址關鍵字（如：聯絡簿、classroom、yt...）" autocomplete="off" onkeydown="handleSearch(event)" onfocus="showSearchDropdown()" oninput="filterSearchDropdown()">
             <button type="button" onclick="execSearchCmd('https://gemini.google.com/', 'googlechrome://gemini.google.com/')" class="gemini-inline-btn" title="啟動 Gemini">
                 <i class="fas fa-wand-magic-sparkles"></i>
             </button>
@@ -282,36 +282,31 @@
     </div>
 
     <script>
-        // 用來動態存放從 HTML 面板抓出來的按鈕資料
         let allSearchItems = [];
 
-        // 【核心】自動掃描全網頁分類選單內的按鈕與連結文字
+        // 自動掃描全網頁分類選單內的按鈕、連結文字與網址
         function initSearchDatabase() {
             allSearchItems = [];
-            // 抓取所有下拉選單中的 a 標籤與 button 標籤
             const menuElements = document.querySelectorAll('.dropdown-content a, .dropdown-content button');
             
             menuElements.forEach(el => {
-                const title = el.innerText.trim(); // 取得按鈕文字
+                const title = el.innerText.trim(); 
                 const iconEl = el.querySelector('i');
-                const iconClass = iconEl ? iconEl.className : 'fas fa-link'; // 取得圖示
-                const color = iconEl ? iconEl.style.color || 'white' : 'white'; // 取得顏色
+                const iconClass = iconEl ? iconEl.className : 'fas fa-link'; 
+                const color = iconEl ? iconEl.style.color || 'white' : 'white'; 
                 
                 let webUrl = '';
                 let iosUrl = '';
 
-                // 解析網址
                 if (el.tagName.toLowerCase() === 'a') {
                     webUrl = el.getAttribute('href');
                 } else if (el.tagName.toLowerCase() === 'button') {
-                    // 解析 smartRedirect('網址', 'iOS協定') 的內容
                     const onclickAttr = el.getAttribute('onclick') || '';
                     const match = onclickAttr.match(/smartRedirect\(['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\)/);
                     if (match) {
                         webUrl = match[1];
                         iosUrl = match[2];
                     } else {
-                        // 檢查一般 execSearchCmd
                         const cmdMatch = onclickAttr.match(/execSearchCmd\(['"]([^'"]+)['"]\)/);
                         if (cmdMatch) webUrl = cmdMatch[1];
                     }
@@ -320,7 +315,7 @@
                 if (webUrl) {
                     allSearchItems.push({
                         title: title,
-                        desc: `點擊直接開啟 ${title}`,
+                        desc: webUrl, // 把描述直接改成網址顯示，更直覺！
                         url: webUrl,
                         iosUrl: iosUrl,
                         icon: iconClass,
@@ -349,19 +344,20 @@
             searchDropdown.classList.remove('active');
         }
 
-        // 真正的動態文字模糊檢索引擎
+        // 全功能智慧檢索：同時比對「名稱文字」與「網址」！
         function filterSearchDropdown() {
             const query = searchInput.value.trim().toLowerCase();
             
             if (!query) {
-                // 如果搜尋框是空的，預設展示前 7 個項目
                 renderDropdownItems(allSearchItems.slice(0, 7));
                 return;
             }
 
-            // 直接對抓取到的「按鈕文字」進行模糊比對
+            // 【核心優化】包含名稱比對 或 網址比對
             const filtered = allSearchItems.filter(item => {
-                return item.title.toLowerCase().includes(query);
+                const nameMatch = item.title.toLowerCase().includes(query);
+                const urlMatch = item.url.toLowerCase().includes(query);
+                return nameMatch || urlMatch;
             });
 
             currentSearchIndex = 0; 
@@ -389,7 +385,7 @@
                     <i class="${item.icon}" style="color: ${item.color};"></i>
                     <div class="search-item-info">
                         <span class="search-item-title">${item.title}</span>
-                        <span class="search-item-desc">${item.desc}</span>
+                        <span class="search-item-desc" style="color: rgba(0, 210, 255, 0.6);">${item.desc}</span>
                     </div>
                 `;
                 
@@ -471,7 +467,6 @@
                 document.body.style.backgroundImage = `url('${savedBg}')`;
             }
             
-            // 初始化動態抓取按鈕資料庫
             initSearchDatabase();
 
             if (searchInput) {
