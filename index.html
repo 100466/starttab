@@ -171,18 +171,6 @@
         <div id="date-display">正在獲取日期...</div>
     </div>
 
-    <div class="search-container">
-        <div class="search-wrapper">
-            <i class="fas fa-search" style="color: var(--accent-blue); margin-right: 15px;"></i>
-            <input type="text" id="smart-search" placeholder="輸入名稱或網址關鍵字（如：聯絡簿、classroom、yt...）" autocomplete="off" onkeydown="handleSearch(event)" onfocus="showSearchDropdown()" oninput="filterSearchDropdown()">
-            <button type="button" onclick="execSearchCmd('https://gemini.google.com/', 'googlechrome://gemini.google.com/')" class="gemini-inline-btn" title="啟動 Gemini">
-                <i class="fas fa-wand-magic-sparkles"></i>
-            </button>
-        </div>
-        
-        <div id="search-dropdown" class="search-dropdown"></div>
-    </div>
-
     <div class="header-nav">
         <div class="dropdown">
             <button class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校專區</button>
@@ -243,6 +231,18 @@
                 <button onclick="smartRedirect('https://www.messenger.com/', 'fb-messenger://')"><i class="fab fa-facebook-messenger" style="color: var(--messenger-color);"></i> Messenger</button>
             </div>
         </div>
+    </div>
+
+    <div class="search-container">
+        <div class="search-wrapper">
+            <i class="fas fa-search" style="color: var(--accent-blue); margin-right: 15px;"></i>
+            <input type="text" id="smart-search" placeholder="輸入名稱或網址關鍵字（如：聯絡簿、classroom、yt...）" autocomplete="off" onkeydown="handleSearch(event)" onfocus="showSearchDropdown()" oninput="filterSearchDropdown()">
+            <button type="button" onclick="execSearchCmd('https://gemini.google.com/', 'googlechrome://gemini.google.com/')" class="gemini-inline-btn" title="啟動 Gemini">
+                <i class="fas fa-wand-magic-sparkles"></i>
+            </button>
+        </div>
+        
+        <div id="search-dropdown" class="search-dropdown"></div>
     </div>
 
     <div class="dashboard-grid">
