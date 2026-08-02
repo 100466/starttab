@@ -65,7 +65,7 @@
             display: none; position: absolute; top: 100%; left: 0; right: 0;
             background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 15px;
-            margin-top: 10px; max-height: 380px; overflow-y: auto; z-index: 2000;
+            margin-top: 10px; max-height: 380px; overflow-y: auto; z-index: 4000;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); text-align: left;
         }
         .search-dropdown.active { display: block; animation: fadeIn 0.2s ease-in-out; }
@@ -92,7 +92,7 @@
         .dropbtn {
             background-color: var(--bg-glass); color: white; padding: 12px 22px;
             font-size: 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50px;
-            cursor: pointer; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px; transition: 0.3s;z-index: 3000;
+            cursor: pointer; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px; transition: 0.3s; z-index: 3000;
         }
         .dropbtn:hover { border-color: var(--accent-blue); background-color: rgba(0, 210, 255, 0.2); }
         
@@ -111,14 +111,14 @@
             background: none; border: none; width: 100%; box-sizing: border-box;
             color: #333; padding: 12px 18px; text-decoration: none; display: flex;
             align-items: center; gap: 10px; font-size: 14px; transition: 0.2s; cursor: pointer;
-            text-align: left; font-family: inherit;z-index: 3000;
+            text-align: left; font-family: inherit; z-index: 3000;
         }
         .dropdown-content button:hover, .dropdown-content a:hover { background: #f0f7ff; padding-left: 22px; }
 
         .mest-icon-circle {
             background-color: white; color: #007bff; border: 1px solid #007bff;
             border-radius: 50%; width: 18px; height: 18px; display: inline-flex; 
-            align-items: center; justify-content: center; font-size: 10px;z-index: 3000;
+            align-items: center; justify-content: center; font-size: 10px; z-index: 3000;
         }
 
         /* 儀表板雙欄並排佈局 */
@@ -190,7 +190,7 @@
                 <button onclick="smartRedirect('https://drive.google.com/', 'googledrive://')"><i class="fab fa-google-drive" style="color: #4285F4;"></i> Google 雲端硬碟</button>
                 <button onclick="smartRedirect('https://calendar.google.com/', 'calshow://')"><i class="far fa-calendar-alt" style="color: var(--calendar-green);"></i> 智慧行事曆</button>
                 <button onclick="smartRedirect('https://mail.google.com/', 'googlegmail://')"><i class="fas fa-envelope" style="color: #EA4335;"></i> Gmail 信箱</button>
-                <button onclick="smartRedirect('https://www.google.com/maps', 'comgooglemaps://')"><i class="fas fa-map-location-dot" style="color: #34A853;"></i> Google 地圖</button>
+                <button onclick="smartRedirect('https://maps.google.com/', 'comgooglemaps://')"><i class="fas fa-map-location-dot" style="color: #34A853;"></i> Google 地圖</button>
                 <button onclick="smartRedirect('https://docs.google.com/', 'googledocs://')"><i class="fas fa-file-lines" style="color: var(--doc-blue);"></i> Google 文件</button>
                 <button onclick="smartRedirect('https://docs.google.com/spreadsheets/', 'googlesheets://')"><i class="fas fa-table" style="color: var(--sheet-green);"></i> Google 試算表</button>
             </div>
@@ -308,8 +308,11 @@
                         webUrl = match[1];
                         iosUrl = match[2];
                     } else {
-                        const cmdMatch = onclickAttr.match(/execSearchCmd\(['"]([^'"]+)['"]\)/);
-                        if (cmdMatch) webUrl = cmdMatch[1];
+                        const cmdMatch = onclickAttr.match(/execSearchCmd\(['"]([^'"]+)['"](?:,\s*['"]([^'"]+)['"])?\)/);
+                        if (cmdMatch) {
+                            webUrl = cmdMatch[1];
+                            if (cmdMatch[2]) iosUrl = cmdMatch[2];
+                        }
                     }
                 }
 
@@ -463,11 +466,29 @@
         }
 
         window.onload = function() {
-            const savedBg = localStorage.getItem('dashboardBg');
-            if (savedBg) {
-                document.body.style.backgroundImage = `url('${savedBg}')`;
+            // 1. 智慧網路偵測：判斷是否為行動數據或省流量模式
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            let isMobileData = false;
+
+            if (connection) {
+                if (connection.type === 'cellular' || connection.saveData) {
+                    isMobileData = true;
+                }
+            }
+
+            // 2. 根據網路狀態決定是否載入背景圖片
+            if (isMobileData) {
+                document.body.style.backgroundImage = 'none';
+                document.body.style.backgroundColor = '#1a1a1a';
+                console.log("📡 偵測到行動數據，已自動關閉背景圖片以節省流量。");
+            } else {
+                const savedBg = localStorage.getItem('dashboardBg');
+                if (savedBg) {
+                    document.body.style.backgroundImage = `url('${savedBg}')`;
+                }
             }
             
+            // 3. 初始化原有的功能
             initSearchDatabase();
 
             if (searchInput) {
