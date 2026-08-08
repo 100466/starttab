@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --bg-glass: rgba(15, 15, 15, 0.75);
+            --bg-glass: rgba(255, 255, 255, 0.07);
             --accent-blue: #00d2ff;
             --white: #ffffff;
             --keep-yellow: #FBBC04;
@@ -21,20 +21,9 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
             margin: 0; padding: 20px;
-            background-repeat: no-repeat; background-size: cover; background-attachment: fixed; background-position: center;
+            background-color: #121212; /* 永遠顯示純暗黑背景 */
             color: var(--white); text-align: center;
-            transition: background-image 0.5s ease-in-out;
         }
-
-        /* 換背景按鈕 */
-        #bg-change-btn {
-            position: fixed; top: 20px; right: 20px;
-            background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white; border-radius: 50%; width: 45px; height: 45px;
-            cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s; z-index: 1000;
-            display: flex; align-items: center; justify-content: center; font-size: 18px;
-        }
-        #bg-change-btn:hover { background: rgba(0, 210, 255, 0.4); border-color: var(--accent-blue); transform: scale(1.1); }
 
         .clock-container { margin: 30px 0; }
         #digital-clock { font-size: 72px; font-weight: 200; margin: 0; letter-spacing: 3px; text-shadow: 0 0 20px rgba(0, 210, 255, 0.5); }
@@ -44,8 +33,8 @@
         .search-container { max-width: 650px; margin: 0 auto 30px; position: relative; }
         .search-wrapper {
             position: relative; width: 100%; display: flex; align-items: center; box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px;
             padding: 5px 10px 5px 20px; transition: 0.3s; z-index: 1001;
         }
         .search-wrapper:focus-within { border-color: var(--accent-blue); box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); }
@@ -62,10 +51,10 @@
         /* Flow Launcher 下拉面板樣式 */
         .search-dropdown {
             display: none; position: absolute; top: 100%; left: 0; right: 0;
-            background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(25px);
+            background: rgba(25, 25, 25, 0.95); backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 15px;
             margin-top: 10px; max-height: 380px; overflow-y: auto; z-index: 4000;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); text-align: left;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8); text-align: left;
         }
         .search-dropdown.active { display: block; animation: fadeIn 0.2s ease-in-out; }
         .search-dropdown::-webkit-scrollbar { width: 6px; }
@@ -135,12 +124,12 @@
         /* 課表樣式 */
         .schedule-table {
             width: 100%; border-collapse: collapse; margin-top: 15px;
-            background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;
+            background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden;
             font-size: 14px;
         }
         .schedule-table th, .schedule-table td { padding: 12px 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .schedule-table th { background: rgba(0, 210, 255, 0.4); }
-        .time-label { background: rgba(255,255,255,0.1); font-weight: bold; width: 50px; }
+        .schedule-table th { background: rgba(0, 210, 255, 0.3); }
+        .time-label { background: rgba(255,255,255,0.05); font-weight: bold; width: 50px; }
         .lunch-break td { background: rgba(0, 210, 255, 0.15); font-size: 14px; letter-spacing: 3px; color: var(--accent-blue); font-weight: bold; }
 
         /* 多重日曆分頁切換樣式 */
@@ -160,10 +149,6 @@
     </style>
 </head>
 <body>
-
-    <button id="bg-change-btn" onclick="changeBackground()" title="更換背景圖片">
-        <i class="fas fa-image"></i>
-    </button>
 
     <div class="clock-container">
         <div id="digital-clock">00:00:00</div>
@@ -284,7 +269,6 @@
     <script>
         let allSearchItems = [];
 
-        // 自動掃描全網頁分類選單內的按鈕、連結文字與網址
         function initSearchDatabase() {
             allSearchItems = [];
             const menuElements = document.querySelectorAll('.dropdown-content a, .dropdown-content button');
@@ -318,7 +302,7 @@
                 if (webUrl) {
                     allSearchItems.push({
                         title: title,
-                        desc: webUrl, // 把描述直接改成網址顯示，更直覺！
+                        desc: webUrl,
                         url: webUrl,
                         iosUrl: iosUrl,
                         icon: iconClass,
@@ -347,7 +331,6 @@
             searchDropdown.classList.remove('active');
         }
 
-        // 全功能智慧檢索：同時比對「名稱文字」與「網址」！
         function filterSearchDropdown() {
             const query = searchInput.value.trim().toLowerCase();
             
@@ -356,7 +339,6 @@
                 return;
             }
 
-            // 【核心優化】包含名稱比對 或 網址比對
             const filtered = allSearchItems.filter(item => {
                 const nameMatch = item.title.toLowerCase().includes(query);
                 const urlMatch = item.url.toLowerCase().includes(query);
@@ -465,29 +447,6 @@
         }
 
         window.onload = function() {
-            // 1. 智慧網路偵測：判斷是否為行動數據或省流量模式
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            let isMobileData = false;
-
-            if (connection) {
-                if (connection.type === 'cellular' || connection.saveData) {
-                    isMobileData = true;
-                }
-            }
-
-            // 2. 根據網路狀態決定是否載入背景圖片
-            if (isMobileData) {
-                document.body.style.backgroundImage = 'none';
-                document.body.style.backgroundColor = '#1a1a1a';
-                console.log("📡 偵測到行動數據，已自動關閉背景圖片以節省流量。");
-            } else {
-                const savedBg = localStorage.getItem('dashboardBg');
-                if (savedBg) {
-                    document.body.style.backgroundImage = `url('${savedBg}')`;
-                }
-            }
-            
-            // 3. 初始化原有的功能
             initSearchDatabase();
 
             if (searchInput) {
@@ -495,20 +454,6 @@
             }
             filterSearchDropdown();
         };
-
-        function changeBackground() {
-            const newUrl = prompt("請貼上新的背景圖片網址 (URL)：\n\n💡 提示：如果想恢復原本的預設背景，請直接留空並按下「確定」。");
-            if (newUrl !== null) {
-                if (newUrl.trim() === "") {
-                    const defaultBg = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80";
-                    document.body.style.backgroundImage = `url('${defaultBg}')`;
-                    localStorage.removeItem('dashboardBg');
-                } else {
-                    document.body.style.backgroundImage = `url('${newUrl}')`;
-                    localStorage.setItem('dashboardBg', newUrl);
-                }
-            }
-        }
 
         function switchCalendar(index) {
             const tabs = document.querySelectorAll('.calendar-tab-btn');
