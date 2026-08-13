@@ -282,6 +282,7 @@
 
     <script>
         let allSearchItems = [];
+        let preventAutoDropdown = true; // 預設防止網頁載入時自動彈出選單
 
         function initSearchDatabase() {
             allSearchItems = [];
@@ -337,6 +338,11 @@
         });
 
         function showSearchDropdown() {
+            // 如果是被網頁載入時的自動對焦觸發，則不顯示選單
+            if (preventAutoDropdown) {
+                preventAutoDropdown = false; // 解除限制，下次點擊就能正常開啟
+                return;
+            }
             searchDropdown.classList.add('active');
             filterSearchDropdown();
         }
@@ -391,6 +397,7 @@
                 searchDropdown.appendChild(itemDiv);
             });
 
+            // 確保打字時就算有 preventAutoDropdown 限制也能強制展開
             searchDropdown.classList.add('active');
             
             const selectedItem = searchDropdown.querySelector('.search-item.selected');
@@ -462,11 +469,13 @@
 
         window.onload = function() {
             initSearchDatabase();
-
+            
             if (searchInput) {
-                searchInput.focus();
+                searchInput.focus(); // 保留自動對焦
             }
-            filterSearchDropdown();
+            
+            // 延遲解除自動展開限制，避免 focus() 瞬間觸發選單
+            setTimeout(() => { preventAutoDropdown = false; }, 300);
         };
 
         function switchCalendar(index) {
