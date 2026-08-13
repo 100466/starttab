@@ -126,6 +126,7 @@
             width: 100%; height: 350px; border-radius: 12px; overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;
             background: rgba(0,0,0,0.3); position: relative;
+            display: flex; align-items: center; justify-content: center;
         }
         .radar-wrapper iframe { width: 100%; height: 100%; border: none; }
 
@@ -230,8 +231,8 @@
     <div class="search-container">
         <div class="search-wrapper">
             <i class="fas fa-search" style="color: var(--accent-blue); margin-right: 15px;"></i>
-            <input type="text" id="smart-search" placeholder="輸入名稱或網址關鍵字（如：聯絡簿、classroom、yt...）" autocomplete="off" onkeydown="handleSearch(event)" onfocus="showSearchDropdown()" oninput="filterSearchDropdown()">
-            <button type="button" onclick="execSearchCmd('https://gemini.google.com/', 'googlechrome://gemini.google.com/')" class="gemini-inline-btn" title="啟動 Gemini">
+            <input type="text" id="smart-search" placeholder="輸入名稱、網址關鍵字或 @r 快捷重複上一次選擇" autocomplete="off" onkeydown="handleSearch(event)" onfocus="showSearchDropdown()" oninput="filterSearchDropdown()">
+            <button type="button" onclick="execSearchCmd('https://gemini.google.com/', 'googlechrome://gemini.google.com/', 'Gemini AI')" class="gemini-inline-btn" title="啟動 Gemini">
                 <i class="fas fa-wand-magic-sparkles"></i>
             </button>
         </div>
@@ -244,7 +245,7 @@
             <h3><i class="fas fa-table-list"></i> 氣象與班級課表</h3>
             
             <div class="radar-wrapper">
-                <iframe src="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html"></iframe>
+                <iframe id="radar-iframe"></iframe>
             </div>
 
             <table class="schedule-table">
@@ -282,7 +283,49 @@
 
     <script>
         let allSearchItems = [];
-        let preventAutoDropdown = true; // 預設防止網頁載入時自動彈出選單
+        let preventAutoDropdown = true; 
+
+        // --- 搜尋歷史資料庫管理 ---
+        function getSearchHistory() {
+            try {
+                return JSON.parse(localStorage.getItem('dashboard_search_history')) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveToSearchHistory(title, url, iosUrl = '', icon = 'fas fa-history', color = '#888') {
+            if (!title || !url) return;
+            let history = getSearchHistory();
+            
+            // 移除已存在的重複項目
+            history = history.filter(item => item.title !== title && item.url !== url);
+            
+            // 加到最前面
+            history.unshift({
+                title: title,
+                desc: '搜尋紀錄：' + url,
+                url: url,
+                iosUrl: iosUrl,
+                icon: icon,
+                color: color,
+                isHistory: true
+            });
+
+            if (history.length > 10) history = history.slice(0, 10);
+            localStorage.setItem('dashboard_search_history', JSON.stringify(history));
+        }
+
+        // 開啟上一次的選擇
+        function openLastSelection() {
+            const history = getSearchHistory();
+            if (history.length > 0) {
+                const lastItem = history[0];
+                execSearchCmd(lastItem.url, lastItem.iosUrl, lastItem.title, lastItem.icon, lastItem.color);
+            } else {
+                alert('目前還沒有任何歷史紀錄喔！');
+            }
+        }
 
         function initSearchDatabase() {
             allSearchItems = [];
@@ -306,7 +349,7 @@
                         webUrl = match[1];
                         iosUrl = match[2];
                     } else {
-                        const cmdMatch = onclickAttr.match(/execSearchCmd\(['"]([^'"]+)['"](?:,\s*['"]([^'"]+)['"])?\)/);
+                        const cmdMatch = onclickAttr.match(/execSearchCmd\(['"]([^'"]+)['"](?:,\s*['"]([^'"]+)['"])?(?:,\s*['"]([^'"]+)['"])?\)/);
                         if (cmdMatch) {
                             webUrl = cmdMatch[1];
                             if (cmdMatch[2]) iosUrl = cmdMatch[2];
@@ -338,9 +381,8 @@
         });
 
         function showSearchDropdown() {
-            // 如果是被網頁載入時的自動對焦觸發，則不顯示選單
             if (preventAutoDropdown) {
-                preventAutoDropdown = false; // 解除限制，下次點擊就能正常開啟
+                preventAutoDropdown = false;
                 return;
             }
             searchDropdown.classList.add('active');
@@ -353,17 +395,51 @@
 
         function filterSearchDropdown() {
             const query = searchInput.value.trim().toLowerCase();
+            const history = getSearchHistory();
             
-            if (!query) {
-                renderDropdownItems(allSearchItems.slice(0, 7));
+            // 處理 @r 快捷預覽
+            if (query === '@r') {
+                if (history.length > 0) {
+                    const last = history[0];
+                    renderDropdownItems([{
+                        title: `🔁 重複開啟上一次選擇：${last.title}`,
+                        desc: last.url,
+                        url: last.url,
+                        iosUrl: last.iosUrl,
+                        icon: last.icon || 'fas fa-redo',
+                        color: 'var(--accent-blue)'
+                    }]);
+                } else {
+                    renderDropdownItems([{
+                        title: '尚無歷史紀錄',
+                        desc: '請先選擇過一次項目',
+                        url: '#',
+                        icon: 'fas fa-exclamation-circle',
+                        color: '#ff4757'
+                    }]);
+                }
                 return;
             }
 
-            const filtered = allSearchItems.filter(item => {
+            if (!query) {
+                const combined = [...history, ...allSearchItems.filter(item => !history.some(h => h.url === item.url))];
+                renderDropdownItems(combined.slice(0, 8));
+                return;
+            }
+
+            const allItems = [...history, ...allSearchItems];
+            const filtered = [];
+            const seenUrls = new Set();
+
+            for (const item of allItems) {
                 const nameMatch = item.title.toLowerCase().includes(query);
                 const urlMatch = item.url.toLowerCase().includes(query);
-                return nameMatch || urlMatch;
-            });
+                
+                if ((nameMatch || urlMatch) && !seenUrls.has(item.url)) {
+                    seenUrls.add(item.url);
+                    filtered.push(item);
+                }
+            }
 
             currentSearchIndex = 0; 
             renderDropdownItems(filtered);
@@ -383,7 +459,8 @@
                 if (index === currentSearchIndex) itemDiv.classList.add('selected');
                 
                 itemDiv.onclick = () => {
-                    execSearchCmd(item.url, item.iosUrl);
+                    if (item.url === '#') return;
+                    execSearchCmd(item.url, item.iosUrl, item.title, item.icon, item.color);
                 };
 
                 itemDiv.innerHTML = `
@@ -397,7 +474,6 @@
                 searchDropdown.appendChild(itemDiv);
             });
 
-            // 確保打字時就算有 preventAutoDropdown 限制也能強制展開
             searchDropdown.classList.add('active');
             
             const selectedItem = searchDropdown.querySelector('.search-item.selected');
@@ -416,10 +492,13 @@
             });
         }
 
-        function execSearchCmd(webUrl, iosUrl) {
+        function execSearchCmd(webUrl, iosUrl, title = '', icon = 'fas fa-search', color = 'var(--accent-blue)') {
+            if (title && webUrl && webUrl !== '#') {
+                saveToSearchHistory(title, webUrl, iosUrl, icon, color);
+            }
             if (iosUrl) {
                 smartRedirect(webUrl, iosUrl);
-            } else {
+            } else if (webUrl !== '#') {
                 window.open(webUrl, '_self');
             }
             hideSearchDropdown();
@@ -427,7 +506,15 @@
 
         function handleSearch(event) {
             const items = searchDropdown.querySelectorAll('.search-item');
-            
+            const inputVal = searchInput.value.trim();
+
+            // 特殊快捷：當搜尋框為空時按下【方向鍵上 ArrowUp】，直接開啟上一次的選擇
+            if (event.key === 'ArrowUp' && !inputVal) {
+                event.preventDefault();
+                openLastSelection();
+                return;
+            }
+
             if (searchDropdown.classList.contains('active') && items.length > 0) {
                 if (event.key === 'ArrowDown') {
                     event.preventDefault();
@@ -441,6 +528,10 @@
                     return;
                 } else if (event.key === 'Enter') {
                     event.preventDefault();
+                    if (inputVal === '@r') {
+                        openLastSelection();
+                        return;
+                    }
                     if (currentSearchIndex > -1 && items[currentSearchIndex]) {
                         items[currentSearchIndex].click();
                     }
@@ -449,20 +540,29 @@
             }
 
             if (event.key === 'Enter') {
-                const input = searchInput.value.trim();
-                if (!input) return;
+                if (!inputVal) return;
+
+                // 如果輸入 @r 按 Enter
+                if (inputVal === '@r') {
+                    event.preventDefault();
+                    openLastSelection();
+                    return;
+                }
 
                 hideSearchDropdown();
 
                 const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
-                if (urlPattern.test(input)) {
-                    let targetUrl = input;
-                    if (!/^https?:\/\//i.test(input)) {
-                        targetUrl = 'http://' + input;
+                if (urlPattern.test(inputVal)) {
+                    let targetUrl = inputVal;
+                    if (!/^https?:\/\//i.test(inputVal)) {
+                        targetUrl = 'http://' + inputVal;
                     }
+                    saveToSearchHistory(inputVal, targetUrl, '', 'fas fa-globe', '#00d2ff');
                     window.open(targetUrl, '_self');
                 } else {
-                    window.open('https://www.google.com/search?q=' + encodeURIComponent(input), '_self');
+                    const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(inputVal);
+                    saveToSearchHistory(inputVal, searchUrl, '', 'fas fa-search', '#4285F4');
+                    window.open(searchUrl, '_self');
                 }
             }
         }
@@ -474,8 +574,15 @@
                 searchInput.focus(); // 保留自動對焦
             }
             
-            // 延遲解除自動展開限制，避免 focus() 瞬間觸發選單
             setTimeout(() => { preventAutoDropdown = false; }, 300);
+
+            // 網頁開啟 3 秒後自動載入雷達回波圖
+            setTimeout(() => {
+                const radar = document.getElementById('radar-iframe');
+                if (radar) {
+                    radar.src = 'https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html';
+                }
+            }, 3000);
         };
 
         function switchCalendar(index) {
