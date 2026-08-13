@@ -119,7 +119,15 @@
         
         @media (max-width: 992px) { .content-card { min-width: 100%; } }
 
-        h3 { margin-top: 0; display: flex; align-items: center; gap: 10px; color: var(--accent-blue); justify-content: center; }
+        h3 { margin-top: 0; display: flex; align-items: center; gap: 10px; color: var(--accent-blue); justify-content: center; margin-bottom: 20px; }
+
+        /* 雷達回波圖嵌入樣式 */
+        .radar-wrapper {
+            width: 100%; height: 350px; border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;
+            background: rgba(0,0,0,0.3); position: relative;
+        }
+        .radar-wrapper iframe { width: 100%; height: 100%; border: none; }
 
         /* 課表樣式 */
         .schedule-table {
@@ -141,7 +149,7 @@
         .calendar-tab-btn:hover { background: rgba(0, 210, 255, 0.2); border-color: var(--accent-blue); }
         .calendar-tab-btn.active { background: var(--calendar-green); border-color: var(--calendar-green); box-shadow: 0 0 10px rgba(52, 168, 83, 0.4); }
 
-        .calendar-wrapper { width: 100%; height: 450px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: white; display: none; }
+        .calendar-wrapper { width: 100%; height: 500px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: white; display: none; }
         .calendar-wrapper.active { display: block; animation: fadeIn 0.3s; }
         .calendar-wrapper iframe { width: 100%; height: 100%; border: none; }
         
@@ -170,7 +178,7 @@
         <div class="dropdown">
             <button class="dropbtn"><i class="fas fa-cloud"></i> 雲端工具</button>
             <div class="dropdown-content">
-                <button onclick="smartRedirect('https://translate.google.com/', 'googletranslate://')"><i class="fas fa-language" style="color: #4285F4;"></i> Google 翻譯</button>
+                <a href="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html" target="_self"><i class="fas fa-cloud-rain" style="color: #74b9ff;"></i> 氣象署雷達回波圖</a>
                 <button onclick="smartRedirect('https://keep.google.com/', 'googlekeep://')"><i class="fas fa-lightbulb" style="color: var(--keep-yellow);"></i> Google Keep 筆記/待辦</button>
                 <button onclick="smartRedirect('https://drive.google.com/', 'googledrive://')"><i class="fab fa-google-drive" style="color: #4285F4;"></i> Google 雲端硬碟</button>
                 <button onclick="smartRedirect('https://calendar.google.com/', 'calshow://')"><i class="far fa-calendar-alt" style="color: var(--calendar-green);"></i> 智慧行事曆</button>
@@ -233,7 +241,12 @@
 
     <div class="dashboard-grid">
         <div class="content-card">
-            <h3><i class="fas fa-table-list"></i> 班級課表</h3>
+            <h3><i class="fas fa-table-list"></i> 氣象與班級課表</h3>
+            
+            <div class="radar-wrapper">
+                <iframe src="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html"></iframe>
+            </div>
+
             <table class="schedule-table">
                 <thead>
                     <tr><th class="time-label">節</th><th>週一</th><th>週二</th><th>週三</th><th>週四</th><th>週五</th></tr>
