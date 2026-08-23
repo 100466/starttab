@@ -179,6 +179,7 @@
         <div class="dropdown">
             <button class="dropbtn"><i class="fas fa-cloud"></i> 雲端工具</button>
             <div class="dropdown-content">
+                <button onclick="smartRedirect('https://translate.google.com/', 'googletranslate://')"><i class="fas fa-language" style="color: #4285F4;"></i> Google 翻譯</button>
                 <a href="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html" target="_self"><i class="fas fa-cloud-rain" style="color: #74b9ff;"></i> 氣象署雷達回波圖</a>
                 <button onclick="smartRedirect('https://keep.google.com/', 'googlekeep://')"><i class="fas fa-lightbulb" style="color: var(--keep-yellow);"></i> Google Keep 筆記/待辦</button>
                 <button onclick="smartRedirect('https://drive.google.com/', 'googledrive://')"><i class="fab fa-google-drive" style="color: #4285F4;"></i> Google 雲端硬碟</button>
@@ -298,10 +299,8 @@
             if (!title || !url) return;
             let history = getSearchHistory();
             
-            // 移除已存在的重複項目
             history = history.filter(item => item.title !== title && item.url !== url);
             
-            // 加到最前面
             history.unshift({
                 title: title,
                 desc: '搜尋紀錄：' + url,
@@ -316,7 +315,6 @@
             localStorage.setItem('dashboard_search_history', JSON.stringify(history));
         }
 
-        // 開啟上一次的選擇
         function openLastSelection() {
             const history = getSearchHistory();
             if (history.length > 0) {
@@ -397,7 +395,6 @@
             const query = searchInput.value.trim().toLowerCase();
             const history = getSearchHistory();
             
-            // 處理 @r 快捷預覽
             if (query === '@r') {
                 if (history.length > 0) {
                     const last = history[0];
@@ -508,7 +505,6 @@
             const items = searchDropdown.querySelectorAll('.search-item');
             const inputVal = searchInput.value.trim();
 
-            // 特殊快捷：當搜尋框為空時按下【方向鍵上 ArrowUp】，直接開啟上一次的選擇
             if (event.key === 'ArrowUp' && !inputVal) {
                 event.preventDefault();
                 openLastSelection();
@@ -542,7 +538,6 @@
             if (event.key === 'Enter') {
                 if (!inputVal) return;
 
-                // 如果輸入 @r 按 Enter
                 if (inputVal === '@r') {
                     event.preventDefault();
                     openLastSelection();
@@ -571,12 +566,11 @@
             initSearchDatabase();
             
             if (searchInput) {
-                searchInput.focus(); // 保留自動對焦
+                searchInput.focus(); 
             }
             
             setTimeout(() => { preventAutoDropdown = false; }, 300);
 
-            // 網頁開啟 3 秒後自動載入雷達回波圖
             setTimeout(() => {
                 const radar = document.getElementById('radar-iframe');
                 if (radar) {
