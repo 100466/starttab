@@ -121,14 +121,13 @@
 
         h3 { margin-top: 0; display: flex; align-items: center; gap: 10px; color: var(--accent-blue); justify-content: center; margin-bottom: 20px; }
 
-        /* 雷達回波圖嵌入樣式 */
+        /* 雷達回波圖外框 */
         .radar-wrapper {
             width: 100%; height: 350px; border-radius: 12px; overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;
             background: rgba(0,0,0,0.3); position: relative;
             display: flex; align-items: center; justify-content: center;
         }
-        .radar-wrapper iframe { width: 100%; height: 100%; border: none; }
 
         /* 課表樣式 */
         .schedule-table {
@@ -247,7 +246,7 @@
             <h3><i class="fas fa-table-list"></i> 氣象與班級課表</h3>
             
             <div class="radar-wrapper">
-                <iframe id="radar-iframe"></iframe>
+                <img id="radar-img" alt="高雄林園雷達圖" style="width:100%; height:100%; object-fit:contain;">
             </div>
 
             <table class="schedule-table">
@@ -572,11 +571,11 @@
             
             setTimeout(() => { preventAutoDropdown = false; }, 300);
 
-            // 延遲 3 秒後同時載入林園雷達站回波圖與所有日曆 iframe
+            // 延遲 3 秒後載入林園雷達站圖片與所有日曆 iframe（僅載入一次，無自動刷新）
             setTimeout(() => {
-                const radar = document.getElementById('radar-iframe');
-                if (radar) {
-                    radar.src = 'https://www.cwa.gov.tw/V8/C/W/OBS_Radar_single.html?PID=RCLY';
+                const radarImg = document.getElementById('radar-img');
+                if (radarImg) {
+                    radarImg.src = 'https://www.cwa.gov.tw/Data/radar/CV3_RCLY_3600.png';
                 }
 
                 const calIframes = document.querySelectorAll('.calendar-wrapper iframe');
