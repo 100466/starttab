@@ -180,7 +180,7 @@
             <button class="dropbtn"><i class="fas fa-cloud"></i> 雲端工具</button>
             <div class="dropdown-content">
                 <button onclick="smartRedirect('https://translate.google.com/', 'googletranslate://')"><i class="fas fa-language" style="color: #4285F4;"></i> Google 翻譯</button>
-                <a href="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html" target="_self"><i class="fas fa-cloud-rain" style="color: #74b9ff;"></i> 氣象署雷達回波圖</a>
+                <a href="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_single.html?PID=RCLY" target="_self"><i class="fas fa-cloud-rain" style="color: #74b9ff;"></i> 林園雷達回波圖</a>
                 <button onclick="smartRedirect('https://keep.google.com/', 'googlekeep://')"><i class="fas fa-lightbulb" style="color: var(--keep-yellow);"></i> Google Keep 筆記/待辦</button>
                 <button onclick="smartRedirect('https://drive.google.com/', 'googledrive://')"><i class="fab fa-google-drive" style="color: #4285F4;"></i> Google 雲端硬碟</button>
                 <button onclick="smartRedirect('https://calendar.google.com/', 'calshow://')"><i class="far fa-calendar-alt" style="color: var(--calendar-green);"></i> 智慧行事曆</button>
@@ -572,11 +572,11 @@
             
             setTimeout(() => { preventAutoDropdown = false; }, 300);
 
-            // 延遲 3 秒後同時載入雷達回波圖與所有日曆 iframe
+            // 延遲 3 秒後同時載入林園雷達站回波圖與所有日曆 iframe
             setTimeout(() => {
                 const radar = document.getElementById('radar-iframe');
                 if (radar) {
-                    radar.src = 'https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html';
+                    radar.src = 'https://www.cwa.gov.tw/V8/C/W/OBS_Radar_single.html?PID=RCLY';
                 }
 
                 const calIframes = document.querySelectorAll('.calendar-wrapper iframe');
