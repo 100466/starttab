@@ -246,7 +246,7 @@
             <h3><i class="fas fa-table-list"></i> 氣象與班級課表</h3>
             
             <div class="radar-wrapper">
-                <img id="radar-img" alt="高雄林園雷達圖" style="width:100%; height:100%; object-fit:contain;">
+                <img id="radar-img" src="https://www.cwa.gov.tw/Data/radar/CV3_RCLY_2500.png" referrerpolicy="no-referrer" alt="高雄林園雷達圖" style="width:100%; height:100%; object-fit:contain;">
             </div>
 
             <table class="schedule-table">
@@ -570,14 +570,14 @@
             }
             
             setTimeout(() => { preventAutoDropdown = false; }, 300);
-
-            // 延遲 3 秒後載入林園雷達站圖片與所有日曆 iframe（僅載入一次，無自動刷新）
+        
+            // 延遲 3 秒後載入林園雷達站圖片與所有日曆 iframe
             setTimeout(() => {
                 const radarImg = document.getElementById('radar-img');
                 if (radarImg) {
-                    radarImg.src = 'https://www.cwa.gov.tw/Data/radar/CV3_RCLY_3600.png';
+                    radarImg.src = 'https://www.cwa.gov.tw/Data/radar/CV3_RCLY_2500.png';
                 }
-
+        
                 const calIframes = document.querySelectorAll('.calendar-wrapper iframe');
                 calIframes.forEach(iframe => {
                     if (iframe.dataset.src) {
