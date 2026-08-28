@@ -276,10 +276,10 @@
                 <button class="calendar-tab-btn" onclick="switchCalendar(2)">行程日曆 B</button>
                 <button class="calendar-tab-btn" onclick="switchCalendar(3)">行程日曆 C</button>
             </div>
-            <div class="calendar-wrapper active"><iframe src="https://calendar.google.com/calendar/embed?src=c_a6c9f987bddfab6ae56e125c44395fa3ddfd11ca11844a00788df7269f740389%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe></div>
-            <div class="calendar-wrapper"><iframe src="https://calendar.google.com/calendar/embed?src=jerry3361999%40gmail.com&ctz=Asia%2FTaipei"></iframe></div>
-            <div class="calendar-wrapper"><iframe src="https://calendar.google.com/calendar/embed?src=m7k83ecsm3pqukojfjt8gjt6u0%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe></div>
-            <div class="calendar-wrapper"><iframe src="https://calendar.google.com/calendar/embed?src=3q9aujb2lch5d6ggkehe97a7do%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe></div>
+            <div class="calendar-wrapper active"><iframe data-src="https://calendar.google.com/calendar/embed?src=c_a6c9f987bddfab6ae56e125c44395fa3ddfd11ca11844a00788df7269f740389%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe></div>
+            <div class="calendar-wrapper"><iframe data-src="https://calendar.google.com/calendar/embed?src=jerry3361999%40gmail.com&ctz=Asia%2FTaipei"></iframe></div>
+            <div class="calendar-wrapper"><iframe data-src="https://calendar.google.com/calendar/embed?src=m7k83ecsm3pqukojfjt8gjt6u0%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe></div>
+            <div class="calendar-wrapper"><iframe data-src="https://calendar.google.com/calendar/embed?src=3q9aujb2lch5d6ggkehe97a7do%40group.calendar.google.com&ctz=Asia%2FTaipei"></iframe></div>
         </div>
     </div>
 
@@ -572,11 +572,19 @@
             
             setTimeout(() => { preventAutoDropdown = false; }, 300);
 
+            // 延遲 3 秒後同時載入雷達回波圖與所有日曆 iframe
             setTimeout(() => {
                 const radar = document.getElementById('radar-iframe');
                 if (radar) {
                     radar.src = 'https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html';
                 }
+
+                const calIframes = document.querySelectorAll('.calendar-wrapper iframe');
+                calIframes.forEach(iframe => {
+                    if (iframe.dataset.src) {
+                        iframe.src = iframe.dataset.src;
+                    }
+                });
             }, 3000);
         };
 
