@@ -126,7 +126,6 @@
             width: 100%; height: 350px; border-radius: 12px; overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;
             background: rgba(0,0,0,0.3); position: relative;
-            display: flex; align-items: center; justify-content: center;
         }
 
         /* 課表樣式 */
@@ -168,7 +167,7 @@
             <button class="dropbtn"><i class="fas fa-graduation-cap"></i> 學校專區</button>
             <div class="dropdown-content">
                 <a href="https://www.fhjh.tn.edu.tw/" target="_self"><i class="fas fa-school" style="color: #ff6b6b;"></i> 學校首頁</a>
-                <a href="https://mest.meikoschool.com.tw/" target="_self"><span class="mest-icon-circle"><i class="fas fa-exclamation"></i></span> Mest 數位學習</a>
+                <a href="https://fhjhtn.teamslite.com.tw/v2/login.html" target="_self"><span class="mest-icon-circle"><i class="fas fa-users"></i></span> 翰林Teams</a>
                 <button onclick="smartRedirect('https://classroom.google.com/', 'googleclassroom://')"><i class="fas fa-chalkboard" style="color: #1a73e8;"></i> Google Classroom</button>
                 <button onclick="smartRedirect('https://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit', 'googlesheets://docs.google.com/spreadsheets/d/13dxNULJ4kTqaSN46Z8IgAbG2l3utWMVDxhEjNFEHdJg/edit')"><i class="fas fa-file-excel" style="color: #1D6F42;"></i> 數位聯絡簿</button>
                 <button onclick="smartRedirect('https://band.us/', 'bandapp://')"><i class="fas fa-b" style="color: #00c73c;"></i> BAND 班級群組</button>
@@ -179,7 +178,7 @@
             <button class="dropbtn"><i class="fas fa-cloud"></i> 雲端工具</button>
             <div class="dropdown-content">
                 <button onclick="smartRedirect('https://translate.google.com/', 'googletranslate://')"><i class="fas fa-language" style="color: #4285F4;"></i> Google 翻譯</button>
-                <a href="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_single.html?PID=RCLY" target="_self"><i class="fas fa-cloud-rain" style="color: #74b9ff;"></i> 林園雷達回波圖</a>
+                <a href="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html" target="_self"><i class="fas fa-cloud-rain" style="color: #74b9ff;"></i> 氣象署雷達回波圖</a>
                 <button onclick="smartRedirect('https://keep.google.com/', 'googlekeep://')"><i class="fas fa-lightbulb" style="color: var(--keep-yellow);"></i> Google Keep 筆記/待辦</button>
                 <button onclick="smartRedirect('https://drive.google.com/', 'googledrive://')"><i class="fab fa-google-drive" style="color: #4285F4;"></i> Google 雲端硬碟</button>
                 <button onclick="smartRedirect('https://calendar.google.com/', 'calshow://')"><i class="far fa-calendar-alt" style="color: var(--calendar-green);"></i> 智慧行事曆</button>
@@ -246,7 +245,7 @@
             <h3><i class="fas fa-table-list"></i> 氣象與班級課表</h3>
             
             <div class="radar-wrapper">
-                <img id="radar-img" src="https://www.cwa.gov.tw/Data/radar/CV3_RCLY_2500.png" referrerpolicy="no-referrer" alt="高雄林園雷達圖" style="width:100%; height:100%; object-fit:contain;">
+                <iframe id="radar-iframe" data-src="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html" style="width:100%; height:100%; border:none;"></iframe>
             </div>
 
             <table class="schedule-table">
@@ -570,14 +569,14 @@
             }
             
             setTimeout(() => { preventAutoDropdown = false; }, 300);
-        
-            // 延遲 3 秒後載入林園雷達站圖片與所有日曆 iframe
+
+            // 延遲 3 秒後載入雷達圖 iframe 與所有日曆 iframe
             setTimeout(() => {
-                const radarImg = document.getElementById('radar-img');
-                if (radarImg) {
-                    radarImg.src = 'https://www.cwa.gov.tw/Data/radar/CV3_RCLY_2500.png';
+                const radarIframe = document.getElementById('radar-iframe');
+                if (radarIframe && radarIframe.dataset.src) {
+                    radarIframe.src = radarIframe.dataset.src;
                 }
-        
+
                 const calIframes = document.querySelectorAll('.calendar-wrapper iframe');
                 calIframes.forEach(iframe => {
                     if (iframe.dataset.src) {
