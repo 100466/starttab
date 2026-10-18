@@ -151,6 +151,38 @@
         .calendar-wrapper { width: 100%; height: 500px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: white; display: none; }
         .calendar-wrapper.active { display: block; animation: fadeIn 0.3s; }
         .calendar-wrapper iframe { width: 100%; height: 100%; border: none; }
+
+        /* 科學計算機彈窗樣式 */
+        .calc-modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
+            z-index: 5000; align-items: center; justify-content: center;
+        }
+        .calc-modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-in-out; }
+        .calc-container {
+            background: rgba(25, 25, 25, 0.95); border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px; padding: 20px; width: 340px; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            position: relative; text-align: left;
+        }
+        .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: var(--accent-blue); font-weight: bold; font-size: 18px; }
+        .calc-close-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; opacity: 0.7; }
+        .calc-close-btn:hover { opacity: 1; }
+        .calc-display {
+            width: 100%; height: 60px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px; color: #fff; font-size: 22px; text-align: right; padding: 10px 15px; box-sizing: border-box;
+            margin-bottom: 15px; overflow-x: auto; font-family: monospace; outline: none;
+        }
+        .calc-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .calc-btn {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white; padding: 12px 5px; border-radius: 10px; font-size: 14px; cursor: pointer;
+            transition: 0.2s; text-align: center; font-weight: 500;
+        }
+        .calc-btn:hover { background: rgba(0, 210, 255, 0.25); border-color: var(--accent-blue); }
+        .calc-btn.operator { background: rgba(0, 210, 255, 0.15); color: var(--accent-blue); }
+        .calc-btn.func { background: rgba(255, 255, 255, 0.12); color: #f39c12; }
+        .calc-btn.equals { background: var(--accent-blue); color: #000; font-weight: bold; grid-column: span 2; }
+        .calc-btn.clear { background: rgba(255, 71, 87, 0.2); color: #ff4757; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -177,6 +209,7 @@
         <div class="dropdown">
             <button class="dropbtn"><i class="fas fa-cloud"></i> 雲端工具</button>
             <div class="dropdown-content">
+                <button onclick="toggleCalculatorModal()"><i class="fas fa-calculator" style="color: #ff9f43;"></i> 科學計算機</button>
                 <button onclick="smartRedirect('https://translate.google.com/', 'googletranslate://')"><i class="fas fa-language" style="color: #4285F4;"></i> Google 翻譯</button>
                 <a href="https://www.cwa.gov.tw/V8/C/W/OBS_Radar_rain.html" target="_self"><i class="fas fa-cloud-rain" style="color: #74b9ff;"></i> 氣象署雷達回波圖</a>
                 <button onclick="smartRedirect('https://keep.google.com/', 'googlekeep://')"><i class="fas fa-lightbulb" style="color: var(--keep-yellow);"></i> Google Keep 筆記/待辦</button>
@@ -281,9 +314,106 @@
         </div>
     </div>
 
+    <!-- 科學計算機 Modal 視窗 -->
+    <div id="calc-modal" class="calc-modal-overlay" onclick="if(event.target===this) toggleCalculatorModal()">
+        <div class="calc-container">
+            <div class="calc-header">
+                <span><i class="fas fa-calculator"></i> 科學計算機</span>
+                <button class="calc-close-btn" onclick="toggleCalculatorModal()"><i class="fas fa-xmark"></i></button>
+            </div>
+            <input type="text" id="calc-display" class="calc-display" readonly placeholder="0">
+            <div class="calc-grid">
+                <button class="calc-btn func" onclick="calcAppend('sin(')">sin</button>
+                <button class="calc-btn func" onclick="calcAppend('cos(')">cos</button>
+                <button class="calc-btn func" onclick="calcAppend('tan(')">tan</button>
+                <button class="calc-btn clear" onclick="calcClear()">AC</button>
+                <button class="calc-btn clear" onclick="calcBackspace()"><i class="fas fa-backspace"></i></button>
+
+                <button class="calc-btn func" onclick="calcAppend('sqrt(')">√</button>
+                <button class="calc-btn func" onclick="calcAppend('^')">^</button>
+                <button class="calc-btn func" onclick="calcAppend('(')">(</button>
+                <button class="calc-btn func" onclick="calcAppend(')')">)</button>
+                <button class="calc-btn operator" onclick="calcAppend('/')">÷</button>
+
+                <button class="calc-btn func" onclick="calcAppend('log(')">log</button>
+                <button class="calc-btn" onclick="calcAppend('7')">7</button>
+                <button class="calc-btn" onclick="calcAppend('8')">8</button>
+                <button class="calc-btn" onclick="calcAppend('9')">9</button>
+                <button class="calc-btn operator" onclick="calcAppend('*')">×</button>
+
+                <button class="calc-btn func" onclick="calcAppend('ln(')">ln</button>
+                <button class="calc-btn" onclick="calcAppend('4')">4</button>
+                <button class="calc-btn" onclick="calcAppend('5')">5</button>
+                <button class="calc-btn" onclick="calcAppend('6')">6</button>
+                <button class="calc-btn operator" onclick="calcAppend('-')">-</button>
+
+                <button class="calc-btn func" onclick="calcAppend('π')">π</button>
+                <button class="calc-btn" onclick="calcAppend('1')">1</button>
+                <button class="calc-btn" onclick="calcAppend('2')">2</button>
+                <button class="calc-btn" onclick="calcAppend('3')">3</button>
+                <button class="calc-btn operator" onclick="calcAppend('+')">+</button>
+
+                <button class="calc-btn func" onclick="calcAppend('e')">e</button>
+                <button class="calc-btn" onclick="calcAppend('0')">0</button>
+                <button class="calc-btn" onclick="calcAppend('.')">.</button>
+                <button class="calc-btn equals" onclick="calcCalculate()">=</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let allSearchItems = [];
-        let preventAutoDropdown = true; 
+        let preventAutoDropdown = false; 
+
+        // --- 科學計算機邏輯 ---
+        function toggleCalculatorModal() {
+            const modal = document.getElementById('calc-modal');
+            if (modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            } else {
+                modal.classList.add('active');
+            }
+        }
+
+        function calcAppend(val) {
+            const display = document.getElementById('calc-display');
+            display.value += val;
+        }
+
+        function calcClear() {
+            document.getElementById('calc-display').value = '';
+        }
+
+        function calcBackspace() {
+            const display = document.getElementById('calc-display');
+            display.value = display.value.slice(0, -1);
+        }
+
+        function calcCalculate() {
+            const display = document.getElementById('calc-display');
+            if (!display.value) return;
+            try {
+                let expr = display.value
+                    .replace(/π/g, 'Math.PI')
+                    .replace(/e/g, 'Math.E')
+                    .replace(/sin\(/g, 'Math.sin(')
+                    .replace(/cos\(/g, 'Math.cos(')
+                    .replace(/tan\(/g, 'Math.tan(')
+                    .replace(/sqrt\(/g, 'Math.sqrt(')
+                    .replace(/log\(/g, 'Math.log10(')
+                    .replace(/ln\(/g, 'Math.log(')
+                    .replace(/\^/g, '**');
+
+                let res = Function('"use strict"; return (' + expr + ')')();
+                if (res !== undefined && !isNaN(res)) {
+                    display.value = Number.isInteger(res) ? res : parseFloat(res.toFixed(8));
+                } else {
+                    display.value = 'Error';
+                }
+            } catch (e) {
+                display.value = 'Error';
+            }
+        }
 
         // --- 搜尋歷史資料庫管理 ---
         function getSearchHistory() {
@@ -350,6 +480,8 @@
                         if (cmdMatch) {
                             webUrl = cmdMatch[1];
                             if (cmdMatch[2]) iosUrl = cmdMatch[2];
+                        } else if (onclickAttr.includes('toggleCalculatorModal')) {
+                            webUrl = 'javascript:toggleCalculatorModal()';
                         }
                     }
                 }
@@ -357,7 +489,7 @@
                 if (webUrl) {
                     allSearchItems.push({
                         title: title,
-                        desc: webUrl,
+                        desc: webUrl.startsWith('javascript:') ? '開啟內建工具' : webUrl,
                         url: webUrl,
                         iosUrl: iosUrl,
                         icon: iconClass,
@@ -379,7 +511,6 @@
 
         function showSearchDropdown() {
             if (preventAutoDropdown) {
-                preventAutoDropdown = false;
                 return;
             }
             searchDropdown.classList.add('active');
@@ -456,6 +587,11 @@
                 
                 itemDiv.onclick = () => {
                     if (item.url === '#') return;
+                    if (item.url.startsWith('javascript:')) {
+                        eval(item.url.replace('javascript:', ''));
+                        hideSearchDropdown();
+                        return;
+                    }
                     execSearchCmd(item.url, item.iosUrl, item.title, item.icon, item.color);
                 };
 
@@ -563,12 +699,6 @@
 
         window.onload = function() {
             initSearchDatabase();
-            
-            if (searchInput) {
-                searchInput.focus(); 
-            }
-            
-            setTimeout(() => { preventAutoDropdown = false; }, 300);
 
             // 延遲 3 秒後載入雷達圖 iframe 與所有日曆 iframe
             setTimeout(() => {
